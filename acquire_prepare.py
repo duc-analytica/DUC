@@ -6,6 +6,6 @@ def acquire_prep():
 
     df.columns = map(str.lower, df.columns)
     df.columns = df.columns.str.replace(' ', '_')
-    df.rename(index=str, columns{'majorphase':'major_phase'})
+    df.rename(index=str, columns{'majorphase':'major_phase'}, inplace=True)
 
     return df
