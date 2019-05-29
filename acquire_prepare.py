@@ -1,11 +1,15 @@
 import pandas as pd
 import numpy as np
 
+### Select Data ###
+
 def acquire_oil():
     '''
     Selected Data from Excel File
     '''
     return pd.read_excel('CapstoneData(5-28-2019).xlsx').infer_objects()
+
+### Process Data ###
 
 def clean_columns(df):
     '''
@@ -35,6 +39,7 @@ def numeric_to_category(df):
     
     return df
 
+### Transform Data ###
 def select_rows(df):
     '''
     Funtion to take out unwanted rows
