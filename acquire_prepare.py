@@ -40,6 +40,7 @@ def numeric_to_category(df):
     return df
 
 ### Transform Data ###
+
 def select_rows(df):
     '''
     Funtion to take out unwanted rows
