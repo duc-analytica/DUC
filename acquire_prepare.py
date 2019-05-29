@@ -95,5 +95,7 @@ def prep_data(df):
     df = post_year(df)
     df = feature_engineer(df)
     df = remove_columns(df)
+
+    df.to_csv('cleaned_oil_df.csv', index=False)
     
-    return df.to_csv('cleaned_oil_df.csv', index=False)
+    return df
