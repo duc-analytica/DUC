@@ -29,4 +29,10 @@ def prep_oil(df):
     df = df[df['first_prod'].dt.year > 1940]
     df = df[df['last_prod'].dt.year > 1940]
 
+    df['recovery'] = df.oil_eur + df.gas_eur/6
+    df['recovery_per_foot'] = df['recovery']/df['lateral_len'] * 1000
+
+    df.drop(columns=['oil_eur', 'gas_eur'], inplace=True)
+
+
     return df
