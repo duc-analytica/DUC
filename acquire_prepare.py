@@ -2,6 +2,9 @@ import pandas as pd
 import numpy as np
 
 def acquire_oil():
+    '''
+    Selected Data from Excel File
+    '''
     return pd.read_excel('CapstoneData(5-28-2019).xlsx').infer_objects()
 
 def prep_oil(df):
