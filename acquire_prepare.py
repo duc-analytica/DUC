@@ -58,7 +58,7 @@ def post_year(df):
 
 def feature_engineer(df):
     '''
-    Function that creates two new features:
+    Function that creates four new features:
         recovery: total number of barrels of either natural gas/oil
         recovery_per_foot: amount of recovery per foot using the pipes lateral length
         months_active: total number of months active
