@@ -66,7 +66,7 @@ def select_rows(df):
     df = df[df.major_phase != 'SWD']
     df = df[df.lateral_len != 0]
     df = df[df.lateral_len < 14000]
-    df = df[df.gor_hist > 20000]
+    df = df[df.gor_hist < 20000]
     
     return df
 
