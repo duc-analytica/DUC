@@ -127,6 +127,14 @@ def vintage_clean_types(df):
 
     return df
 
+def fill_zero(df):
+    '''
+    Function to replace all null values with zero
+    '''
+    df['gor_hist'].fillna(value=0, inplace=True)
+    
+    return df
+
 def prep_data(df):
     '''
     Function that combines all functions and produces a final dataframe in a csv
@@ -141,6 +149,7 @@ def prep_data(df):
     df = feature_engineer(df)
     df = remove_columns(df)
     df = vintage_clean_types(df)
+    df = fill_zero(df)
 
     df.to_csv('cleaned_oil_df.csv', index=False)
     
