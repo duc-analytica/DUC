@@ -109,6 +109,19 @@ def remove_columns(df):
     
     return df
 
+def vintage_clean_types(df):
+    '''
+    Function that creates a column that houses year of first production, then changes all pre 1996 pumps
+    to vertical based on the fact that horizontal drilling started in 1996.  The final step is to change
+    types that are \'other\' to vertical or horizontal based on lateral length.
+    '''
+    df['vintage'] = df.first_prod.dt.year
+    df.type.loc[df['vintage'] < 1996] = 'Vertical'
+    df.type.loc[df['lateral_len'] < 1600] = 'Vertical'
+    df.type.loc[df['lateral_len'] > 1600] = 'Horizontal'
+
+    return df
+
 def prep_data(df):
     '''
     Function that combines all functions and produces a final dataframe in a csv
@@ -122,6 +135,7 @@ def prep_data(df):
     df = select_rows(df)
     df = feature_engineer(df)
     df = remove_columns(df)
+    df = vintage_clean_types(df)
 
     df.to_csv('cleaned_oil_df.csv', index=False)
     
