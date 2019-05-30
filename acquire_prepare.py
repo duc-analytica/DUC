@@ -7,7 +7,7 @@ def acquire_oil():
     '''
     Selected Data from Excel File
     '''
-    return pd.read_excel('CapstoneData(5-28-2019).xlsx').infer_objects()
+    return pd.read_excel('CapstoneData.xlsx').infer_objects()
 
 ### Process Data ###
 
@@ -19,6 +19,22 @@ def clean_columns(df):
     df.columns = df.columns.str.replace(' ', '_')
     df.rename(index=str, columns={'majorphase':'major_phase'}, inplace=True)
     
+    return df
+
+def reclass_status(df):
+    '''   consolidate all the different 'Status' labels to either 'Active' 
+       when 'last_prod' date is after September 2018
+      - OR -     'Inactive'  when 'last_prod' date is equal to or prior to September 2018
+     '''
+    df['status'] = np.where((df.last_prod > '2018-9-1'), 'Active', 'Inactive')
+    return df
+
+def fill_inactive_eurs(df):
+    '''   look for null EURs in 'Inactive' wells and populate those null values with 
+       'hist' values   (cumulative oil or gas volumes)
+    '''
+    df['oil_eur'] = np.where(  ( (df.status == 'Inactive') & (df.oil_eur.isna()) ) , df.oil_hist, df.oil_eur  )
+    df['gas_eur'] = np.where(  ( (df.status == 'Inactive') & (df.gas_eur.isna()) ) , df.gas_hist, df.gas_eur  )
     return df
 
 def drop_na(df):
@@ -70,21 +86,24 @@ def feature_engineer(df):
         months_active: total number of months active
         recover_per_month: amount each API gained per month
     '''
+    #  recovery units are     mboeq         (thousand barrel oil equivalents)   
     df['recovery'] = df.oil_eur + df.gas_eur/6
+    #  recovery_per_foot units are  boe/ft       (barrels (boe) per foot)    
     df['recovery_per_foot'] = df['recovery']/df['lateral_len'] * 1000
     
     df['months_active'] = (df.last_prod.dt.to_period('M') - df.first_prod.dt.to_period('M')).astype(int)
     df['months_active'].replace('0', '1', inplace=True)
 
-    df['recovery_per_month'] = df.recovery / df.months_active
+    # recovery_per_month  units  are     bbls/month    (barrels per month)
+    df['recovery_per_month'] = (df.recovery * 1000) / df.months_active
     
     return df
 
 def remove_columns(df):
     '''
-    Function that removes columns we no longer need: 'client_id' and 'entity_reserve_category'
+    Function that removes columns we no longer need:  ,   gg - got rid of entity_reserve_column
     '''
-    cols_to_remove = ['client_id', 'entity_reserve_category', 'oil_eur', 'gas_eur']
+    cols_to_remove = [ 'oil_eur', 'gas_eur']
     
     df = df.drop(columns=cols_to_remove)
     
@@ -95,10 +114,12 @@ def prep_data(df):
     Function that combines all functions and produces a final dataframe in a csv
     '''
     df = clean_columns(df)
+    df = post_year(df)
+    df = reclass_status(df)
+    df = fill_inactive_eurs(df)
     df = drop_na(df)
     df = numeric_to_category(df)
     df = select_rows(df)
-    df = post_year(df)
     df = feature_engineer(df)
     df = remove_columns(df)
 
