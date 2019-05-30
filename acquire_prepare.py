@@ -116,7 +116,7 @@ def vintage_clean_types(df):
     types that are \'other\' to vertical or horizontal based on lateral length.
     '''
     df['vintage'] = df.first_prod.dt.year
-    df.type.loc[df['vintage'] < 1996] = 'Vertical'
+    # df.type.loc[df['vintage'] < 1996] = 'Vertical'
     df.type.loc[(df['lateral_len'] < 1600) & (df.type == 'Other')] = 'Vertical'
     df.type.loc[(df['lateral_len'] > 1600) & (df.type == 'Other')] = 'Horizontal'
 
