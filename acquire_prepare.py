@@ -96,6 +96,11 @@ def feature_engineer(df):
 
     # recovery_per_month  units  are     bbls/month    (barrels per month)
     df['recovery_per_month'] = (df.recovery * 1000) / df.months_active
+
+    # lateral_class are binned lengths per 1000 feet
+    labels=['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen']
+
+    df['lateral_class'] = pd.cut(df.lateral_len, [0, 1000, 2000, 3000, 4000, 5000, 6000, 7000,  8000, 9000, 10000, 11000, 12000, 13000, 14000], include_lowest=True, labels=labels)
     
     return df
 
