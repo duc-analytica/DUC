@@ -129,6 +129,17 @@ def vintage_clean_types(df):
 
     return df
 
+def bin_vintage(df):
+    '''
+    Function to bin vintage into 5 groups
+    '''
+    # vintage binned by era's 
+    year_labels=[1, 2, 3, 4, 5]
+
+    df['vintage_bin'] = pd.cut(df.vintage, [0, 1970, 1990, 2000, 2013, 2020], include_lowest=True, labels=year_labels)
+
+    return df
+
 def remove_integrity_issues_lat_length_type(df):
     '''
     Using domain knowledge, we have decided to remove wells that are over 1,600 lateral length and classified
@@ -137,6 +148,14 @@ def remove_integrity_issues_lat_length_type(df):
     '''
     df = df[~((df.lateral_len > 1600) & (df.type == 'Vertical'))]
     df = df[~((df.lateral_len < 600) & (df.type == 'Horizontal'))]
+
+    return df
+
+def remove_non_permian_counties(df):
+    '''
+    Function to remove counties that are not in geographic proximity of the Permian Basin.
+    '''
+    df = df[~(df.county.isin(['ATASCOSA', 'BEE', 'DE WITT', 'DIMMIT', 'FRIO', 'GOLIAD', 'KARNES','LIVE OAK', 'MC MULLEN', 'WILSON']))]
 
     return df
 
@@ -162,7 +181,9 @@ def prep_data(df):
     df = feature_engineer(df)
     df = remove_columns(df)
     df = vintage_clean_types(df)
+    df = bin_vintage(df)
     df = remove_integrity_issues_lat_length_type(df)
+    df = remove_non_permian_counties(df)
     df = fill_zero(df)
 
     df.to_csv('cleaned_oil_df.csv', index=False)
