@@ -166,7 +166,7 @@ def fill_zero(df):
     '''
     df['gor_hist'].fillna(value=0, inplace=True)
     df['frac_fluid_type'] = df['frac_fluid_type'].replace(np.nan, 'Unknown')
-    df.frac_fluid_type.loc[(df['frac_fluid_type'] == 'None')] = 'Other'
+    df.frac_fluid_type.loc[(df['frac_fluid_type'] == 'None')] = 'Unknown'
     
     return df
 
