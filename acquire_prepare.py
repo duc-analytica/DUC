@@ -93,6 +93,7 @@ def feature_engineer(df):
     df = df[df.recovery < 1000]
     #  recovery_per_foot units are  boe/ft       (barrels (boe) per foot)    
     df['recovery_per_foot'] = df['recovery']/df['lateral_len'] * 1000
+    df = df[df.recovery_per_foot < 1000]
     
     df['months_active'] = (df.last_prod.dt.to_period('M') - df.first_prod.dt.to_period('M')).astype(int)
     df['months_active'].replace('0', '1', inplace=True)
