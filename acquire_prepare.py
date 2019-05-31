@@ -137,6 +137,7 @@ def bin_vintage(df):
     year_labels=[1, 2, 3, 4, 5]
 
     df['vintage_bin'] = pd.cut(df.vintage, [0, 1970, 1990, 2000, 2013, 2020], include_lowest=True, labels=year_labels)
+    df['vintage_bin'] = df['vintage_bin'].astype(str).astype(int)
 
     return df
 
