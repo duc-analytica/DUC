@@ -120,12 +120,23 @@ def vintage_clean_types(df):
     '''
     Function that creates a column that houses year of first production, then changes all pre 1996 pumps
     to vertical based on the fact that horizontal drilling started in 1996.  The final step is to change
-    types that are \'other\' to vertical or horizontal based on lateral length.
+    types that are 'other' to vertical or horizontal based on lateral length.
     '''
     df['vintage'] = df.first_prod.dt.year
-    # df.type.loc[df['vintage'] < 1996] = 'Vertical'
+    df.type.loc[df['vintage'] < 1990] = 'Vertical'
     df.type.loc[(df['lateral_len'] < 1600) & (df.type == 'Other')] = 'Vertical'
     df.type.loc[(df['lateral_len'] > 1600) & (df.type == 'Other')] = 'Horizontal'
+
+    return df
+
+def remove_integrity_issues_lat_length_type(df):
+    '''
+    Using domain knowledge, we have decided to remove wells that are over 1,600 lateral length and classified
+    as vertical as well as remove wells under 600 lateral length and classified as horizontal as these appear
+    to be data integrity issues.
+    '''
+    df = df[~((df.lateral_len > 1600) & (df.type == 'Vertical'))]
+    df = df[~((df.lateral_len < 600) & (df.type == 'Horizontal'))]
 
     return df
 
@@ -151,6 +162,7 @@ def prep_data(df):
     df = feature_engineer(df)
     df = remove_columns(df)
     df = vintage_clean_types(df)
+    df = remove_integrity_issues_lat_length_type(df)
     df = fill_zero(df)
 
     df.to_csv('cleaned_oil_df.csv', index=False)
