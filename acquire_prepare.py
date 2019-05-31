@@ -160,6 +160,15 @@ def remove_non_permian_counties(df):
 
     return df
 
+def minimize_operators(df):
+    '''
+    Function to change operators for wells not in the top 9 to other in an effort to reduce the number of operators.
+    '''
+    top_10 = df.oper.value_counts()[:9].index.tolist()
+    df.oper[~df.oper.isin(top_10)] = 'OTHER'
+
+    return df
+
 def fill_zero(df):
     '''
     Function to replace all null values with zero or unknown
@@ -187,6 +196,7 @@ def prep_data(df):
     df = bin_vintage(df)
     df = remove_integrity_issues_lat_length_type(df)
     df = remove_non_permian_counties(df)
+    df = minimize_operators(df)
     df = fill_zero(df)
 
     df.to_csv('cleaned_oil_df.csv', index=False)
