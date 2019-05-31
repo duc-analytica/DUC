@@ -162,9 +162,10 @@ def remove_non_permian_counties(df):
 
 def fill_zero(df):
     '''
-    Function to replace all null values with zero
+    Function to replace all null values with zero or unknown
     '''
     df['gor_hist'].fillna(value=0, inplace=True)
+    df['frac_fluid_type'] = df['frac_fluid_type'].replace(np.nan, 'Unknown')
     
     return df
 
