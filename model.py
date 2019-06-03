@@ -11,6 +11,16 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, median_absolute_error
 
+def filter_columns(df,listofcolumns):
+    #   ''' arguments - (dataframe), columns to include in returned dataframe
+    #  ''' 
+    newdf = df.copy()
+    col_list = df.columns 
+    for column in col_list:
+        if column not in listofcolumns:
+            newdf.drop([column], axis=1, inplace=True)
+    return newdf
+
 def compare_ttests(df,dependentvar,skipcolumns=[]):
     # '''  arguments  - (dataframe, dependent variable column (string), columns to skip (list) is optional) 
     # Purpose is to run Ttests on the dependent variable value of all columns, separated by the mean of each column
