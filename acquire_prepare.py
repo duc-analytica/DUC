@@ -166,8 +166,24 @@ def minimize_operators(df):
     '''
     Function to change operators for wells not in the top 9 to other in an effort to reduce the number of operators.
     '''
-    top_10 = df.oper.value_counts()[:9].index.tolist()
-    df.oper[~df.oper.isin(top_10)] = 'OTHER'
+#     top_10 = df.oper.value_counts()[:9].index.tolist()
+#     df.oper[~df.oper.isin(top_10)] = 'OTHER'
+    '''
+    Function to change operators for wells to root of the operator name.
+    '''
+    df.oper = df.oper.str.replace(r'(^.*APACHE.*$)','apache')
+    df.oper = df.oper.str.replace(r'(^.*PIONEER.*$)','pioneer')
+    df.oper = df.oper.str.replace(r'(^.*CALLON.*$)','callon')
+    df.oper = df.oper.str.replace(r'(^.*CHEVRON.*$)','chevron')
+    df.oper = df.oper.str.replace(r'(^.*COG.*$)','cog')
+    df.oper = df.oper.str.replace(r'(^.*CONCHO.*$)','concho')
+    df.oper = df.oper.str.replace(r'(^.*ENDEAVOR.*$)','endeavor')
+    df.oper = df.oper.str.replace(r'(^.*GLOSSOP.*$)','glossop')
+    df.oper = df.oper.str.replace(r'(^.*OXY.*$)','oxy')
+    df.oper = df.oper.str.replace(r'(^.*OCCIDENTAL.*$)','oxy')
+    df.oper = df.oper.str.replace(r'(^.*PARSLEY.*$)', 'parsley')
+    df.oper = df.oper.str.replace(r'(^.*parsley.*$)', 'parker & parsley')
+    df['oper'] = df['oper'].map(lambda oper: oper.lower())
 
     return df
 
