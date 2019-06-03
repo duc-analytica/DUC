@@ -20,4 +20,8 @@ We are building a predictive model on the relationship between oil recovery and 
 >- Geographic clustering of drilling data could lead us to different projections  
 >- Higher proppant PPF/frac fluid theoretically leads to more recovery.  Not an assumption - higher costs as proppant PPF goes up  
 
-
+### Data Dictionary:  
+Attribute | Definition
+------------ | -------------
+API | American Petroleum Identification Code
+Type | Vertical, Horizontal drill
