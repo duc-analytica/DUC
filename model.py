@@ -11,6 +11,15 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, median_absolute_error
 
+
+def get_numeric_columns(df, skipcolumns=[]):
+    #   ''' arguments - (dataframe, optional list of strings)
+    #   Purpose is to return a list of numeric columns from a dataframe
+    #   second argument is optional - is a list of numeric columns you dont want included in the returned list '''df.fillna(value=0, inplace=True)   
+    column_list = df.select_dtypes(include=[np.number]).columns.tolist()
+    numeric_column_list = [x for x in column_list if x not in skipcolumns]
+    return(numeric_column_list)
+
 def filter_columns(df,listofcolumns):
     #   ''' arguments - (dataframe), columns to include in returned dataframe
     #  ''' 
