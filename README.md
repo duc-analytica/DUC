@@ -35,4 +35,16 @@ Frac Stages | Number of stages of fracking
 Frac Fluid Type | Type of fluid used in the fracking process
 First Prod | First production date
 Last Prod | Last production date
+Oil EUR | Estimated ultimate recovery of oil
+Gas EUR | Estimated ultimate recovery of gas
+Oil Gravity | gas and oil ration
+QI init | Initial production rate
+GOR History | The ratio of gas to oil produced to date by each well
+IP90 BOEQPD | Initial potential 90-day barrel of oil equivalent (oil and gas) per day
+MidPoint Lat | Midpoint surface latitude
+MidPoint Long | Midpoint suface longitude
+Sur Lat | Surface latitude
+Sur Long | Surface longitude
+Client ID | Identification of client who owns each well
+Well ID | Identification given to each well
 
