@@ -24,4 +24,6 @@ We are building a predictive model on the relationship between oil recovery and 
 Attribute | Definition
 ------------ | -------------
 API | American Petroleum Identification Code
-Type | Vertical, Horizontal drill
+Type | Vertical or Horizontal drill
+Status | a. Active: Producing and having an ultimate recovery number  
+b. Completed: Hooked up and and ready for production, may not be producting yet
