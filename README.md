@@ -7,7 +7,6 @@ We are building a predictive model on the relationship between oil recovery and 
 > Joseph Burton  
 > Sandy Graham  
 
-![alt text](PBimage.jpeg "Permian Basin Becoming the World's Largest Oil Field")
 
 ### Goals for the Project Are:
 >- Scale oil recovery from vertical wells to horizontal wells to longer horizontal wells  
