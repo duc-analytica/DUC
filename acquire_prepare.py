@@ -68,6 +68,7 @@ def select_rows(df):
     df = df[df.lateral_len < 14000]
     df = df[df.gor_hist < 20000]
     df = df[df.frac_fluid_gpf < 3000]
+    df = df[df.proppant_ppf < 4000]
     
     return df
 
