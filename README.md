@@ -13,7 +13,7 @@ We are building a predictive model on the relationship between oil recovery and 
 >- Finding a correlation between horizontal distance drilled and the amount of oil recovered   
 >- Resample our wells by end date year and compare results to see if production has increased over time with the assumption of better technologies and processes
 
-### Image of Permian Basin
+### Image of Permian Basin (todo)
 
 ### Assumptions before we begin:
 >- Cost increases per linear foot drilled  
@@ -50,4 +50,4 @@ Sur Long | Surface longitude
 Client ID | Identification of client who owns each well
 Well ID | Identification given to each well
 
-### Data Vizualizations
+### Data Vizualizations (todo)
