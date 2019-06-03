@@ -1,6 +1,7 @@
 # Codeup Capstone Project:  
+We are building a predictive model on the relationship between oil recovery and the lateral length of wells without using complex geological parameters.
 
-#### Contributors  
+#### Contributors:  
 > Eric Escalante  
 > Gary Gonzenbach  
 > Joseph Burton  
