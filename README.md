@@ -25,4 +25,14 @@ Attribute | Definition
 ------------ | -------------
 API | American Petroleum Identification Code
 Type | Vertical or Horizontal drill
-Status | a. Active: Producing and having an ultimate recovery number b. Completed: Hooked up and and ready for production, may not be producting yet c. Drilling: Actively being drilled d. Drilled Uncompleted: Drilled and hooked up, but not yet in production
+MajorPhase | Which is the dominant substance (Gas, or Oil)
+Formation |  Name of the layer of rock
+Production Method | Which type of surgace maching is being used
+Proppant Pound Per Foot | After injecting water for fracking, sand or ceramic is injected to hold open the layers of formation, to “prop” open the layers
+Frac Fluid GPF | How much water is forced into the hold to frack it
+Lateral Length | length of perforations to let the oil into the pipe
+Frac Stages | Number of stages of fracking
+Frac Fluid Type | Type of fluid used in the fracking process
+First Prod | First production date
+Last Prod | Last production date
+
