@@ -25,5 +25,5 @@ Attribute | Definition
 ------------ | -------------
 API | American Petroleum Identification Code
 Type | Vertical or Horizontal drill
-Status | a. Active: Producing and having an ultimate recovery number  
+Status | a. Active: Producing and having an ultimate recovery number
 b. Completed: Hooked up and and ready for production, may not be producting yet
