@@ -207,7 +207,7 @@ def rename_cols(df):
     '''
     Rename columns to more industry specific names
     '''    
-    df.rename(index=str, columns={'lateral_length':'gross_perfs'}, inplace=True)
+    df.rename(index=str, columns={'lateral_len':'gross_perfs'}, inplace=True)
     df.rename(index=str, columns={'landing_depth':'tvd'}, inplace=True)
     df.rename(index=str, columns={'type':'direction'}, inplace=True)
 
