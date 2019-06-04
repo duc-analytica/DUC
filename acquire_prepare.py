@@ -195,7 +195,12 @@ def fill_zero(df):
     df['gor_hist'].fillna(value=0, inplace=True)
     df['frac_fluid_type'] = df['frac_fluid_type'].replace(np.nan, 'Unknown')
     df.frac_fluid_type.loc[(df['frac_fluid_type'] == 'None')] = 'Unknown'
-    
+    df['type'] = df['type'].replace(np.nan, 'Unknown')
+    df['status'] = df['status'].replace(np.nan, 'Unknown')
+    df['major_phase'] = df['major_phase'].replace(np.nan, 'Unknown')
+    df['prod_method'] = df['prod_method'].replace(np.nan, 'Unknown')
+    df['lateral_class'] = df['lateral_class'].replace(np.nan, 'Unknown')
+
     return df
 
 def prep_data(df):
@@ -207,7 +212,6 @@ def prep_data(df):
     df = reclass_status(df)
     df = fill_inactive_eurs(df)
     df = drop_na(df)
-    df = numeric_to_category(df)
     df = select_rows(df)
     df = feature_engineer(df)
     df = remove_columns(df)
@@ -217,6 +221,7 @@ def prep_data(df):
     df = remove_non_permian_counties(df)
     df = minimize_operators(df)
     df = fill_zero(df)
+    df = numeric_to_category(df)
 
     df.to_csv('cleaned_oil_df.csv', index=False)
     
