@@ -203,6 +203,14 @@ def fill_zero(df):
 
     return df
 
+def rename_cols(df):
+    '''
+    Rename columns to more industry specific names
+    '''    
+    df.rename(index=str, columns={'lateral_length':'gross_perfs'}, inplace=True)
+    df.rename(index=str, columns={'landing_depth':'tvd'}, inplace=True)
+    df.rename(index=str, columns={'type':'direction'}, inplace=True)
+
 def prep_data(df):
     '''
     Function that combines all functions and produces a final dataframe in a csv
@@ -222,6 +230,7 @@ def prep_data(df):
     df = minimize_operators(df)
     df = fill_zero(df)
     df = numeric_to_category(df)
+    rename_cols(df)
 
     df.to_csv('cleaned_oil_df.csv', index=False)
     
