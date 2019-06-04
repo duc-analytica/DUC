@@ -200,7 +200,19 @@ def fill_zero(df):
     df['major_phase'] = df['major_phase'].replace(np.nan, 'Unknown')
     df['prod_method'] = df['prod_method'].replace(np.nan, 'Unknown')
     df['lateral_class'] = df['lateral_class'].replace(np.nan, 'Unknown')
-
+    # change landing_depth NaNs to median of that formation
+    med_Spr = df.landing_depth[df.formation == 'SPRABERRY'].median()
+    df.landing_depth.fillna(value=med_Spr, inplace=True)
+    # change frac_stages NaNs of vertically-drilled wells to 1
+    middle = df['frac_stages'][(df.type == 'Horizontal')].median()
+    condition1 = (df.frac_stages.isnull()) & (df.type == 'Vertical')
+    df['frac_stages'] = np.where((condition1), 1, df['frac_stages'])
+    # change frac_stages NaNs of horizontally-drilled wells to median of the horizontally-drilled wells
+    condition2 = (df.frac_stages.isnull()) & (df.type == 'Horizontal')
+    df['frac_stages'] = np.where((condition2), middle, df['frac_stages'])
+    # change oil_gravity NaNs to 0.
+    df['oil_gravity'] = np.where(df.oil_gravity.isnull(), 0, df['oil_gravity'])
+    
     return df
 
 def rename_cols(df):
