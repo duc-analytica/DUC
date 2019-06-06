@@ -266,10 +266,22 @@ def encode_scale(df):
         df[new_scaled_column] = (df[col] - df[col].min()) / (df[col].max() - df[col].min())
     return(df)
 
-def prep_data(df):
-    '''
-    Function that combines all functions and produces a final dataframe in a csv
-    '''
+def prep_data(df,basin='all',direc='all',tvdmin=0,tvdmax=0,gperfmin=0,gperfmax=0,multiwell='all',clusterid=99):
+    #''' Function that combines all functions and produces a final dataframe in a csv
+    #    basin options = all,central platform, delaware, midland
+    #    direc options = 'all', 'horizontal', 'vertical'
+    #    tvdmin  (numeric)  - selects observations greater than tvdmin  (0 means no minimum)
+    #    tvdmax  (numeric)  - selects observations less than tvdmin  (0 means no maximum)
+    #    gperfmin  (numeric)  - selects observations greater than gperfmin  (0 means no minimum)
+    #    gperfmax  (numeric)  - selects observations less than gperfmax  (0 means no maximum)    
+    #    multi-well options - 'all', 'true', 'false'
+    #    clusterid options - 99=all, or input specific numeric id value
+    #    here's an example
+    #    prep_data(df,'midland','horizontal',0,7000,4800,0,'false',99)
+    #    returns a dataframe for midland sub_basin, horizontal wells only, tvd less than 7000, 
+    #         gross_perfs greater than 4800, single well leases only, any cluster  
+    #         resulting dataset is less than 100 rows
+    #'''
     df = clean_columns(df)
     df = post_year(df)
     df = reclass_status(df)
@@ -286,6 +298,30 @@ def prep_data(df):
     df = fill_zero(df)
     df = numeric_to_category(df)
     rename_cols(df)
+    # filter out subsets of dataframe based on function parameters, this needs to happen
+    #  before scaling the data
+    if basin !='all':
+        df = df[(df.sub_basin.str.lower() == basin.lower())]
+    if multiwell.lower() !='all':
+        if multiwell.lower() == 'true':   
+            df = df[(df.multi_well_lease == True)]    
+        if multiwell.lower() == 'false':   
+            df = df[(df.multi_well_lease == False)]        
+    if direc !='all':
+        df = df[(df.direction.str.lower() == direc.lower())] 
+    if tvdmin > 0:
+        df = df[(df.tvd > tvdmin)] 
+    if tvdmax > 0:
+        df = df[(df.tvd < tvdmax)] 
+    if gperfmin > 0:
+        df = df[(df.gross_perfs > gperfmin)]   
+    if gperfmax > 0:
+        df = df[(df.gross_perfs < gperfmax)]   
+    if clusterid != 99:
+        df = df[(df.clusterid == clusterid)] 
+    if len(df) < 100:
+        print(' WARNING- Number of Observations is too low: ',len(df))
+
     df = encode_scale(df)   
     df.to_csv('cleaned_oil_df.csv', index=False)
     
