@@ -88,7 +88,7 @@ def create_kclusters(df,col_list,n_clusters,nameof_clustercolumn):
     cluster_df[nameof_clustercolumn] = kmeans.predict(cluster_df)        
     cluster_df.drop(col_list,axis=1,inplace=True)
     return_df = pd.concat([df,cluster_df], axis=1, join_axes=[df.index]) 
-    return return_df, return_inertia, return_labels
+    return return_df.head(), return_inertia, return_labels
 
 def lregression_test(df,xfeatures,yfeature,train_size):
     from sklearn.linear_model import LinearRegression
