@@ -78,17 +78,18 @@ def create_kclusters(df,col_list,n_clusters,nameof_clustercolumn):
         df.drop([nameof_clustercolumn],axis=1,inplace=True)
     cluster_df = df.copy()
     df_columns = df.columns
+
     for thiscolumn in df_columns:
         if thiscolumn not in col_list:
             cluster_df.drop([thiscolumn], axis=1, inplace=True)
+
     kmeans = KMeans(n_clusters)            
     kmeans.fit(cluster_df)
-    return_inertia = kmeans.inertia_ 
-    return_labels = kmeans.labels_       
+      
     cluster_df[nameof_clustercolumn] = kmeans.predict(cluster_df)        
     cluster_df.drop(col_list,axis=1,inplace=True)
     return_df = pd.concat([df,cluster_df], axis=1, join_axes=[df.index]) 
-    return return_df, return_inertia, return_labels
+    return return_df
 
 def lregression_test(df,xfeatures,yfeature,train_size):
     from sklearn.linear_model import LinearRegression
@@ -98,13 +99,16 @@ def lregression_test(df,xfeatures,yfeature,train_size):
 
     y = df[yfeature]
     X = df[xfeatures]
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=.80, random_state=123)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, random_state=123)
     
-    X_train = pd.DataFrame(preprocessing.scale(X_train))
-    X_test = pd.DataFrame(preprocessing.scale(X_test))
+    X_train_scaled = pd.DataFrame(preprocessing.scale(X_train))
+    X_test_scaled = pd.DataFrame(preprocessing.scale(X_test))
     
-    train = pd.concat([X_train, y_train], axis=1)
-    test = pd.concat([X_test, y_test], axis=1)
+    y_train.reset_index(inplace=True, drop=True)
+    y_test.reset_index(inplace=True, drop=True)
+
+    train = pd.concat([X_train_scaled, y_train], axis=1)
+    test = pd.concat([X_test_scaled, y_test], axis=1)
 
     lm1 = LinearRegression(fit_intercept=False) 
     lm1.fit(X_train, y_train)
@@ -129,13 +133,16 @@ def rregression_test(df,xfeatures,yfeature,train_size):
 
     y = df[yfeature]
     X = df[xfeatures]
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=.80, random_state=123)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, random_state=123)
     
-    X_train = pd.DataFrame(preprocessing.scale(X_train))
-    X_test = pd.DataFrame(preprocessing.scale(X_test))
+    X_train_scaled = pd.DataFrame(preprocessing.scale(X_train))
+    X_test_scaled = pd.DataFrame(preprocessing.scale(X_test))
     
-    train = pd.concat([X_train, y_train], axis=1)
-    test = pd.concat([X_test, y_test], axis=1)
+    y_train.reset_index(inplace=True, drop=True)
+    y_test.reset_index(inplace=True, drop=True)
+
+    train = pd.concat([X_train_scaled, y_train], axis=1)
+    test = pd.concat([X_test_scaled, y_test], axis=1)
 
     reg = linear_model.Ridge(alpha=.5)
     reg.fit(X_train, y_train)
@@ -154,32 +161,37 @@ def rregression_test(df,xfeatures,yfeature,train_size):
 def pregression_test(df,xfeatures,yfeature,train_size):
     from sklearn.preprocessing import PolynomialFeatures
     from sklearn.linear_model import LinearRegression
+    from sklearn.pipeline import Pipeline
+
     from sklearn.model_selection import train_test_split
     from sklearn.metrics import mean_squared_error, r2_score
     from sklearn import preprocessing
 
     y = df[yfeature]
     X = df[xfeatures]
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=.80, random_state=123)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, random_state=123)
     
-    X_train = pd.DataFrame(preprocessing.scale(X_train))
-    X_test = pd.DataFrame(preprocessing.scale(X_test))
+    X_train_scaled = pd.DataFrame(preprocessing.scale(X_train))
+    X_test_scaled = pd.DataFrame(preprocessing.scale(X_test))
     
-    train = pd.concat([X_train, y_train], axis=1)
-    test = pd.concat([X_test, y_test], axis=1)
-    
-    poly_features = PolynomialFeatures(degree=2)
-    X_train = poly_features.fit_transform(X_train)
+    y_train.reset_index(inplace=True, drop=True)
+    y_test.reset_index(inplace=True, drop=True)
 
-    poly = LinearRegression(fit_intercept=False) 
-    poly.fit(X_train, y_train)
-    LinearRegression(copy_X=True, fit_intercept=False, n_jobs=None, normalize=False)
+    train = pd.concat([X_train_scaled, y_train], axis=1)
+    test = pd.concat([X_test_scaled, y_test], axis=1)
+
+    poly_features = PolynomialFeatures(degree=2)
+    X_train_scaled = poly_features.fit_transform(X_train_scaled)
+
+    model = Pipeline([('poly', PolynomialFeatures(degree=2)), 
+        ('linear', LinearRegression(fit_intercept=False))])
     
-    poly_y_intercept = poly.intercept_
-    poly_coefficients = poly.coef_
-    y_pred_poly = poly.predict(X_train)
     
+    model = model.fit(X_train_scaled, y_train)
+    model.named_steps['linear'].coef_
+    y_pred_poly = model.predict(X_train_scaled)
+
     mse = mean_squared_error(y_train, y_pred_poly)
     r2 = r2_score(y_train, y_pred_poly)
     
-    return mse, r2, poly.coef_
+    return mse, r2, model.named_steps['linear'].coef_
