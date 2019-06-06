@@ -99,13 +99,16 @@ def lregression_test(df,xfeatures,yfeature,train_size):
 
     y = df[yfeature]
     X = df[xfeatures]
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=.80, random_state=123)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, random_state=123)
     
-    X_train = pd.DataFrame(preprocessing.scale(X_train))
-    X_test = pd.DataFrame(preprocessing.scale(X_test))
+    X_train_scaled = pd.DataFrame(preprocessing.scale(X_train))
+    X_test_scaled = pd.DataFrame(preprocessing.scale(X_test))
     
-    train = pd.concat([X_train, y_train], axis=1)
-    test = pd.concat([X_test, y_test], axis=1)
+    y_train.reset_index(inplace=True, drop=True)
+    y_test.reset_index(inplace=True, drop=True)
+
+    train = pd.concat([X_train_scaled, y_train], axis=1)
+    test = pd.concat([X_test_scaled, y_test], axis=1)
 
     lm1 = LinearRegression(fit_intercept=False) 
     lm1.fit(X_train, y_train)
@@ -130,13 +133,16 @@ def rregression_test(df,xfeatures,yfeature,train_size):
 
     y = df[yfeature]
     X = df[xfeatures]
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=.80, random_state=123)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, random_state=123)
     
-    X_train = pd.DataFrame(preprocessing.scale(X_train))
-    X_test = pd.DataFrame(preprocessing.scale(X_test))
+    X_train_scaled = pd.DataFrame(preprocessing.scale(X_train))
+    X_test_scaled = pd.DataFrame(preprocessing.scale(X_test))
     
-    train = pd.concat([X_train, y_train], axis=1)
-    test = pd.concat([X_test, y_test], axis=1)
+    y_train.reset_index(inplace=True, drop=True)
+    y_test.reset_index(inplace=True, drop=True)
+
+    train = pd.concat([X_train_scaled, y_train], axis=1)
+    test = pd.concat([X_test_scaled, y_test], axis=1)
 
     reg = linear_model.Ridge(alpha=.5)
     reg.fit(X_train, y_train)
