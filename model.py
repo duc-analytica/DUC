@@ -94,6 +94,7 @@ def lregression_test(df,xfeatures,yfeature,train_size):
     from sklearn.linear_model import LinearRegression
     from sklearn.model_selection import train_test_split
     from sklearn.metrics import mean_squared_error, r2_score
+    from sklearn import preprocessing
 
     y = df[yfeature]
     X = df[xfeatures]
@@ -124,6 +125,7 @@ def rregression_test(df,xfeatures,yfeature,train_size):
     from sklearn import linear_model
     from sklearn.model_selection import train_test_split
     from sklearn.metrics import mean_squared_error, r2_score
+    from sklearn import preprocessing
 
     y = df[yfeature]
     X = df[xfeatures]
@@ -154,7 +156,8 @@ def pregression_test(df,xfeatures,yfeature,train_size):
     from sklearn.linear_model import LinearRegression
     from sklearn.model_selection import train_test_split
     from sklearn.metrics import mean_squared_error, r2_score
-    
+    from sklearn import preprocessing
+
     y = df[yfeature]
     X = df[xfeatures]
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=.80, random_state=123)
