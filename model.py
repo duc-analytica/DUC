@@ -114,3 +114,29 @@ def lregression_test(df,xfeatures,yfeature,train_size):
     r2 = r2_score(y_train, y_pred_lm1)
     
     return mse, r2, lm1.coef_
+
+
+def rregression_test(df,xfeatures,yfeature,train_size):
+    
+    y = df[yfeature]
+    X = df[xfeatures]
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=.80, random_state=123)
+    
+    X_train = pd.DataFrame(preprocessing.scale(X_train))
+    X_test = pd.DataFrame(preprocessing.scale(X_test))
+    
+    train = pd.concat([X_train, y_train], axis=1)
+    test = pd.concat([X_test, y_test], axis=1)
+
+    reg = linear_model.Ridge(alpha=.5)
+    reg.fit(X_train, y_train)
+    Ridge(alpha=0.5, copy_X=True, fit_intercept=True, max_iter=None, normalize=False, random_state=123, solver='auto', tol=0.001)
+    
+    reg_y_intercept = reg.intercept_ 
+    reg_coefficients = reg.coef_
+    y_pred_reg = reg.predict(X_train)
+    
+    mse = mean_squared_error(y_train, y_pred_reg)
+    r2 = r2_score(y_train, y_pred_reg)
+    
+    return mse, r2, reg.coef_
