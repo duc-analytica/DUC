@@ -140,3 +140,32 @@ def rregression_test(df,xfeatures,yfeature,train_size):
     r2 = r2_score(y_train, y_pred_reg)
     
     return mse, r2, reg.coef_
+
+
+def pregression_test(df,xfeatures,yfeature,train_size):
+    
+    y = df[yfeature]
+    X = df[xfeatures]
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=.80, random_state=123)
+    
+    X_train = pd.DataFrame(preprocessing.scale(X_train))
+    X_test = pd.DataFrame(preprocessing.scale(X_test))
+    
+    train = pd.concat([X_train, y_train], axis=1)
+    test = pd.concat([X_test, y_test], axis=1)
+    
+    poly_features = PolynomialFeatures(degree=2)
+    X_train = poly_features.fit_transform(X_train)
+
+    poly = LinearRegression(fit_intercept=False) 
+    poly.fit(X_train, y_train)
+    LinearRegression(copy_X=True, fit_intercept=False, n_jobs=None, normalize=False)
+    
+    poly_y_intercept = poly.intercept_
+    poly_coefficients = poly.coef_
+    y_pred_poly = poly.predict(X_train)
+    
+    mse = mean_squared_error(y_train, y_pred_poly)
+    r2 = r2_score(y_train, y_pred_poly)
+    
+    return mse, r2, poly.coef_
