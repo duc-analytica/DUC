@@ -91,7 +91,10 @@ def create_kclusters(df,col_list,n_clusters,nameof_clustercolumn):
     return return_df, return_inertia, return_labels
 
 def lregression_test(df,xfeatures,yfeature,train_size):
-    
+    from sklearn.linear_model import LinearRegression
+    from sklearn.model_selection import train_test_split
+    from sklearn.metrics import mean_squared_error, r2_score
+
     y = df[yfeature]
     X = df[xfeatures]
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=.80, random_state=123)
@@ -117,7 +120,11 @@ def lregression_test(df,xfeatures,yfeature,train_size):
 
 
 def rregression_test(df,xfeatures,yfeature,train_size):
-    
+    from sklearn.linear_model import Ridge
+    from sklearn import linear_model
+    from sklearn.model_selection import train_test_split
+    from sklearn.metrics import mean_squared_error, r2_score
+
     y = df[yfeature]
     X = df[xfeatures]
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=.80, random_state=123)
@@ -143,6 +150,10 @@ def rregression_test(df,xfeatures,yfeature,train_size):
 
 
 def pregression_test(df,xfeatures,yfeature,train_size):
+    from sklearn.preprocessing import PolynomialFeatures
+    from sklearn.linear_model import LinearRegression
+    from sklearn.model_selection import train_test_split
+    from sklearn.metrics import mean_squared_error, r2_score
     
     y = df[yfeature]
     X = df[xfeatures]
