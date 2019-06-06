@@ -226,7 +226,7 @@ def rename_cols(df):
 
 def encode_scale(df):    
 # add any columns to be ignore, this function will ignore any column in this list PLUS any column that contains a substring in this list    
-    columns_to_ignore = ['recovery','recovery_per_foot','recovery_per_month','multi_well_lease','status','major_phase','prod_method','api14','encoded_','scaled_','recovery','vintage_bin','sur_lat','sur_long','peak_boepd','oil_hist','gas_hist','ip90_boeqpd','well_id','months_active','_prod','lease_name','well_number']
+    columns_to_ignore = ['recovery','clusterid','recovery_per_foot','recovery_per_month','multi_well_lease','status','major_phase','prod_method','api14','encoded_','scaled_','recovery','vintage_bin','sur_lat','sur_long','peak_boepd','oil_hist','gas_hist','ip90_boeqpd','well_id','months_active','_prod','lease_name','well_number','sub_basin']
     numeric_columns = df.select_dtypes(include=[np.number]).columns.tolist()
     object_columns = df.select_dtypes(include='object').columns.tolist()
     category_columns = df.select_dtypes(include='category').columns.tolist()
