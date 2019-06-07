@@ -4,7 +4,10 @@ import xgboost as xgb
 from model import get_scaled_df
 
 def xgb_rank(df,target_variable,feature_percent=80,mode='gain'):
-    # ''' pass it the dataframe and the target variable,  returns a sorted list 
+    # ''' pass it the dataframe and the target variable,  
+    #   returns a sorted feature list, and a sorted scaled feature list, and a dataframe
+    #    the two returned lists only have the variables that satisfy the cumulative percentage limit
+    #       the dataframe has all features
     #      in decending order as well as a dataframe showing all cumulative percent rankings
     #      feature_percent is the optional cut-off (default is 80 percent) for features
     #      mode is optional,  default is 'gain' (importance),  other values are
@@ -13,7 +16,6 @@ def xgb_rank(df,target_variable,feature_percent=80,mode='gain'):
 
     scaled_df = get_scaled_df(df) 
     scaled_df = scaled_df.drop('recovery',1) 
-    scaled_columns = scaled_df.columns.values.tolist()
     xgb_params = {'max_depth': 8,'seed' : 123}
     dtrain = xgb.DMatrix(scaled_df, target_variable, feature_names=scaled_df.columns.values)
     model = xgb.train(dict(xgb_params, silent=0), dtrain, num_boost_round=50)
@@ -29,14 +31,16 @@ def xgb_rank(df,target_variable,feature_percent=80,mode='gain'):
     importance_df[mode] = importance_df[mode].apply(lambda x: round(x, 2))
     importance_df['cum_sum'] = round(importance_df[mode].cumsum(),2)
     importance_df['cum_perc'] = round(100*importance_df.cum_sum/importance_df[mode].sum(),2)
-    
-    feature_list =[] 
+    feature_list = []
+    scaled_features = [] 
     for i in range((importance_df.shape[0])): 
         feature_name = importance_df.iloc[i,1].replace('scaled_','')
+        scaled_name = 'scaled_' + feature_name
         importance_df.iloc[i,1] = feature_name
         cum_percent = importance_df.iloc[i,4]
         if cum_percent > feature_percent:
             break
         else:
             feature_list.append(feature_name)
-    return feature_list, importance_df
+            scaled_features.append(scaled_name)
+    return feature_list, scaled_features, importance_df, 
