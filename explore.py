@@ -44,3 +44,30 @@ def xgb_rank(df,target_variable,feature_percent=80,mode='gain'):
             feature_list.append(feature_name)
             scaled_features.append(scaled_name)
     return feature_list, scaled_features, importance_df, 
+
+def nulls_by_col(df):
+    num_missing = df.isnull().sum()
+    rows = df.shape[0]
+    pct_missing = num_missing/rows
+    cols_missing = pd.DataFrame({'num_rows_missing': num_missing, 'pct_rows_missing': pct_missing})
+    return cols_missing
+
+def nulls_by_row(df):
+    num_cols_missing = df.isnull().sum(axis=1)
+    pct_cols_missing = df.isnull().sum(axis=1)/df.shape[1]*100
+    rows_missing = pd.DataFrame({'num_cols_missing': num_cols_missing, 'pct_cols_missing': pct_cols_missing}).reset_index().groupby(['num_cols_missing','pct_cols_missing']).count().rename(index=str, columns={'index': 'num_rows'}).reset_index()
+    return rows_missing
+
+
+def df_summary(df):
+    print('--- Shape: {}'.format(df.shape))
+    print('--- Info')
+    df.info()
+    print('--- Descriptions')
+    print(df.describe(include='all'))
+    print('--- Nulls By Column')
+    print(nulls_by_col(df))
+    print('--- Nulls By Row')
+    print(nulls_by_row(df))
+    print('---Unique Rows')
+    print (df.apply(lambda x: x.nunique()))
