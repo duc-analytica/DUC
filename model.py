@@ -204,3 +204,42 @@ def pregression_test(df,xfeatures,yfeature,train_size):
     r2 = r2_score(y_train, y_pred_poly)
     
     return mse, r2, model.named_steps['linear'].coef_, cross_val_score
+
+def lasso_regression_test(df,xfeatures,yfeature,train_size):
+    from sklearn.linear_model import LinearRegression
+    from sklearn import linear_model
+    
+    from sklearn.model_selection import train_test_split
+    from sklearn.metrics import mean_squared_error, r2_score
+    from sklearn import preprocessing
+    from sklearn.model_selection import cross_val_score
+
+    y = df[yfeature]
+    X = df[xfeatures]
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, random_state=123)
+    
+    X_train_scaled = pd.DataFrame(preprocessing.scale(X_train))
+    X_test_scaled = pd.DataFrame(preprocessing.scale(X_test))
+    
+    y_train.reset_index(inplace=True, drop=True)
+    y_test.reset_index(inplace=True, drop=True)
+
+    train = pd.concat([X_train_scaled, y_train], axis=1)
+    test = pd.concat([X_test_scaled, y_test], axis=1)
+
+    clf = linear_model.Lasso(alpha=0.1) 
+    clf.fit(X_train, y_train)
+    linear_model.Lasso(alpha=0.1, copy_X=True, fit_intercept=True, max_iter=1000, 
+          normalize=False, positive=False, precompute=False, random_state=None, 
+          selection='cyclic', tol=0.0001, warm_start=False)
+    
+    cross_val_score = cross_val_score(clf, X_train, y_train, cv=3)
+    
+    clf_y_intercept = clf.intercept_
+    clf_coefficients = clf.coef_
+    y_pred_clf = clf.predict(X_train)
+    
+    mse = mean_squared_error(y_train, y_pred_clf)
+    r2 = r2_score(y_train, y_pred_clf)
+    
+    return mse, r2, clf.coef_, cross_val_score
