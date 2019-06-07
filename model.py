@@ -22,7 +22,7 @@ def get_scaled_df(df):
             'well_id', 'mid_point_lat', 'mid_point_long', 'recovery_per_foot', 
             'months_active', 'recovery_per_month', 'vintage', 'vintage_bin', 
             'encoded_direction', 'encoded_frac_fluid_type', 'encoded_county', 
-            'encoded_oper', 'encoded_formation', 'encoded_lateral_class','clusterid'])
+            'encoded_oper', 'encoded_formation', 'encoded_lateral_class',])
     return scaled_df
 
 def get_numeric_columns(df, skipcolumns=[]):
