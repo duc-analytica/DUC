@@ -22,7 +22,7 @@ def get_scaled_df(df):
             'well_id', 'mid_point_lat', 'mid_point_long', 'recovery_per_foot', 
             'months_active', 'recovery_per_month', 'vintage', 'vintage_bin', 
             'encoded_direction', 'encoded_frac_fluid_type', 'encoded_county', 
-            'encoded_oper', 'encoded_formation', 'encoded_lateral_class',])
+            'encoded_oper', 'encoded_formation', 'encoded_lateral_class','clusterid'])
     return scaled_df
 
 def get_numeric_columns(df, skipcolumns=[]):
@@ -96,7 +96,6 @@ def lregression_test(df,xfeatures,yfeature,train_size):
     from sklearn.model_selection import train_test_split
     from sklearn.metrics import mean_squared_error, r2_score
     from sklearn import preprocessing
-    from sklearn.model_selection import cross_val_score
 
     y = df[yfeature]
     X = df[xfeatures]
@@ -115,8 +114,6 @@ def lregression_test(df,xfeatures,yfeature,train_size):
     lm1.fit(X_train, y_train)
     LinearRegression(copy_X=True, fit_intercept=False, n_jobs=None, normalize=False)
     
-    cross_val_score = cross_val_score(lm1, X_train, y_train, cv=3)
-    
     lm1_y_intercept = lm1.intercept_
     lm1_coefficients = lm1.coef_
     y_pred_lm1 = lm1.predict(X_train)
@@ -124,7 +121,7 @@ def lregression_test(df,xfeatures,yfeature,train_size):
     mse = mean_squared_error(y_train, y_pred_lm1)
     r2 = r2_score(y_train, y_pred_lm1)
     
-    return mse, r2, lm1.coef_, cross_val_score
+    return mse, r2, lm1.coef_
 
 
 def rregression_test(df,xfeatures,yfeature,train_size):
@@ -133,7 +130,6 @@ def rregression_test(df,xfeatures,yfeature,train_size):
     from sklearn.model_selection import train_test_split
     from sklearn.metrics import mean_squared_error, r2_score
     from sklearn import preprocessing
-    from sklearn.model_selection import cross_val_score
 
     y = df[yfeature]
     X = df[xfeatures]
@@ -152,8 +148,6 @@ def rregression_test(df,xfeatures,yfeature,train_size):
     reg.fit(X_train, y_train)
     Ridge(alpha=0.5, copy_X=True, fit_intercept=True, max_iter=None, normalize=False, random_state=123, solver='auto', tol=0.001)
     
-    cross_val_score = cross_val_score(reg, X_train, y_train, cv=3)
-    
     reg_y_intercept = reg.intercept_ 
     reg_coefficients = reg.coef_
     y_pred_reg = reg.predict(X_train)
@@ -161,7 +155,7 @@ def rregression_test(df,xfeatures,yfeature,train_size):
     mse = mean_squared_error(y_train, y_pred_reg)
     r2 = r2_score(y_train, y_pred_reg)
     
-    return mse, r2, reg.coef_, cross_val_score
+    return mse, r2, reg.coef_
 
 
 def pregression_test(df,xfeatures,yfeature,train_size):
@@ -172,7 +166,6 @@ def pregression_test(df,xfeatures,yfeature,train_size):
     from sklearn.model_selection import train_test_split
     from sklearn.metrics import mean_squared_error, r2_score
     from sklearn import preprocessing
-    from sklearn.model_selection import cross_val_score
 
     y = df[yfeature]
     X = df[xfeatures]
@@ -196,50 +189,9 @@ def pregression_test(df,xfeatures,yfeature,train_size):
     
     model = model.fit(X_train_scaled, y_train)
     model.named_steps['linear'].coef_
-    
-    cross_val_score = cross_val_score(model, X_train, y_train, cv=3)
-    
     y_pred_poly = model.predict(X_train_scaled)
+
     mse = mean_squared_error(y_train, y_pred_poly)
     r2 = r2_score(y_train, y_pred_poly)
     
-    return mse, r2, model.named_steps['linear'].coef_, cross_val_score
-
-def lasso_regression_test(df,xfeatures,yfeature,train_size):
-    from sklearn.linear_model import LinearRegression
-    from sklearn import linear_model
-    
-    from sklearn.model_selection import train_test_split
-    from sklearn.metrics import mean_squared_error, r2_score
-    from sklearn import preprocessing
-    from sklearn.model_selection import cross_val_score
-
-    y = df[yfeature]
-    X = df[xfeatures]
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, random_state=123)
-    
-    X_train_scaled = pd.DataFrame(preprocessing.scale(X_train))
-    X_test_scaled = pd.DataFrame(preprocessing.scale(X_test))
-    
-    y_train.reset_index(inplace=True, drop=True)
-    y_test.reset_index(inplace=True, drop=True)
-
-    train = pd.concat([X_train_scaled, y_train], axis=1)
-    test = pd.concat([X_test_scaled, y_test], axis=1)
-
-    clf = linear_model.Lasso(alpha=0.1) 
-    clf.fit(X_train, y_train)
-    linear_model.Lasso(alpha=0.1, copy_X=True, fit_intercept=True, max_iter=1000, 
-          normalize=False, positive=False, precompute=False, random_state=None, 
-          selection='cyclic', tol=0.0001, warm_start=False)
-    
-    cross_val_score = cross_val_score(clf, X_train, y_train, cv=3)
-    
-    clf_y_intercept = clf.intercept_
-    clf_coefficients = clf.coef_
-    y_pred_clf = clf.predict(X_train)
-    
-    mse = mean_squared_error(y_train, y_pred_clf)
-    r2 = r2_score(y_train, y_pred_clf)
-    
-    return mse, r2, clf.coef_, cross_val_score
+    return mse, r2, model.named_steps['linear'].coef_
