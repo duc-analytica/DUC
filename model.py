@@ -2,6 +2,8 @@
 
 import pandas as pd
 import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 import scipy.stats as stats
 from scipy.stats import pearsonr
@@ -127,7 +129,23 @@ def lregression_test(df,xfeatures,yfeature,train_size):
     mse = mean_squared_error(y_train, y_pred_lm1)
     r2 = r2_score(y_train, y_pred_lm1)
     
-    return mse, r2, lm1.coef_, cross_val_score
+    print('This regression model accounts for {:.2%} of the variance in recovery with the selected features.'.format(r2))
+    print('-----')
+    print('Cross-validation Scores: {}'.format(cross_val_score))
+    print('-----')
+    print('The Coefficients of Variation: {}'.format(lm1.coef_))
+
+    pd.DataFrame({'actual': y_train.recovery,
+                  'pm1': y_pred_lm1.ravel()})\
+                  .melt(id_vars=['actual'], var_name='model', value_name='prediction')\
+                  .pipe((sns.relplot, 'data'), x='actual', y='prediction')
+    
+    plt.plot([10, 1000], [10, 1000], c='black', ls=':')
+    plt.xlabel('Actual Recovery')
+    plt.ylabel('Predicted Recovery')
+    plt.title('Linear Regression: Predicted vs. Actual Recovery Amounts')
+    
+    return
 
 
 def rregression_test(df,xfeatures,yfeature,train_size):
@@ -163,8 +181,24 @@ def rregression_test(df,xfeatures,yfeature,train_size):
     
     mse = mean_squared_error(y_train, y_pred_reg)
     r2 = r2_score(y_train, y_pred_reg)
+
+    pd.DataFrame({'actual': y_train.recovery,
+                  'pm1': y_pred_reg.ravel()})\
+                  .melt(id_vars=['actual'], var_name='model', value_name='prediction')\
+                  .pipe((sns.relplot, 'data'), x='actual', y='prediction')
     
-    return mse, r2, reg.coef_, cross_val_score
+    plt.plot([10, 1000], [10, 1000], c='black', ls=':')
+    plt.xlabel('Actual Recovery')
+    plt.ylabel('Predicted Recovery')
+    plt.title('Ridge Regression: Predicted vs. Actual Recovery Amounts')
+    
+    print('This regression model accounts for {:.2%} of the variance in recovery with the selected features.'.format(r2))
+    print('-----')
+    print('Cross-validation Scores: {}'.format(cross_val_score))
+    print('-----')
+    print('The Coefficients of Variation: {}'.format(reg.coef_))
+    
+    return
 
 
 def pregression_test(df,xfeatures,yfeature,train_size):
@@ -205,8 +239,24 @@ def pregression_test(df,xfeatures,yfeature,train_size):
     y_pred_poly = model.predict(X_train_scaled)
     mse = mean_squared_error(y_train, y_pred_poly)
     r2 = r2_score(y_train, y_pred_poly)
+
+    pd.DataFrame({'actual': y_train.recovery,
+                  'pm1': y_pred_poly.ravel()})\
+                  .melt(id_vars=['actual'], var_name='model', value_name='prediction')\
+                  .pipe((sns.relplot, 'data'), x='actual', y='prediction')
     
-    return mse, r2, model.named_steps['linear'].coef_, cross_val_score
+    plt.plot([10, 1000], [10, 1000], c='black', ls=':')
+    plt.xlabel('Actual Recovery')
+    plt.ylabel('Predicted Recovery')
+    plt.title('Polynomial Regression: Predicted vs. Actual Recovery Amounts')
+    
+    print('This regression model accounts for {:.2%} of the variance in recovery with the selected features.'.format(r2))
+    print('-----')
+    print('Cross-validation Scores: {}'.format(cross_val_score))
+    print('-----')
+    print('The Coefficients of Variation: {}'.format(model.named_steps['linear'].coef_))
+    
+    return
 
 def lasso_regression_test(df,xfeatures,yfeature,train_size):
     from sklearn.linear_model import LinearRegression
@@ -244,5 +294,38 @@ def lasso_regression_test(df,xfeatures,yfeature,train_size):
     
     mse = mean_squared_error(y_train, y_pred_clf)
     r2 = r2_score(y_train, y_pred_clf)
+
+    pd.DataFrame({'actual': y_train.recovery,
+                  'pm1': y_pred_clf.ravel()})\
+                  .melt(id_vars=['actual'], var_name='model', value_name='prediction')\
+                  .pipe((sns.relplot, 'data'), x='actual', y='prediction')
     
-    return mse, r2, clf.coef_, cross_val_score
+    plt.plot([10, 1000], [10, 1000], c='black', ls=':')
+    plt.xlabel('Actual Recovery')
+    plt.ylabel('Predicted Recovery')
+    plt.title('Lasso Regression: Predicted vs. Actual Recovery Amounts')
+    
+    print('This regression model accounts for {:.2%} of the variance in recovery with the selected features.'.format(r2))
+    print('-----')
+    print('Cross-validation Scores: {}'.format(cross_val_score))
+    print('-----')
+    print('The Coefficients of Variation: {}'.format(reg.coef_))
+
+    
+    
+    return
+
+def run_models(df,xfeatures,yfeature,train_size):
+    '''
+    Funtion to run all models
+    '''
+    print('Logistic Regression Model:')
+    lregression_test(df, xfeatures, yfeature, 0.80)
+    print('\n')
+    print('Ridge Regression Model:')
+    rregression_test(df, xfeatures, yfeature, 0.80)
+    print('\n')
+    print('Polynomial Regression Model:')
+    pregression_test(df, xfeatures, yfeature, 0.80)
+    
+    return
