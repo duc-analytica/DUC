@@ -130,6 +130,7 @@ def rregression_test(df,xfeatures,yfeature,train_size):
     from sklearn.model_selection import train_test_split
     from sklearn.metrics import mean_squared_error, r2_score
     from sklearn import preprocessing
+    from sklearn.model_selection import cross_val_score
 
     y = df[yfeature]
     X = df[xfeatures]
@@ -148,6 +149,8 @@ def rregression_test(df,xfeatures,yfeature,train_size):
     reg.fit(X_train, y_train)
     Ridge(alpha=0.5, copy_X=True, fit_intercept=True, max_iter=None, normalize=False, random_state=123, solver='auto', tol=0.001)
     
+    cross_val_score = cross_val_score(reg, X_train, y_train, cv=3)
+    
     reg_y_intercept = reg.intercept_ 
     reg_coefficients = reg.coef_
     y_pred_reg = reg.predict(X_train)
@@ -155,7 +158,7 @@ def rregression_test(df,xfeatures,yfeature,train_size):
     mse = mean_squared_error(y_train, y_pred_reg)
     r2 = r2_score(y_train, y_pred_reg)
     
-    return mse, r2, reg.coef_
+    return mse, r2, reg.coef_, cross_val_score
 
 
 def pregression_test(df,xfeatures,yfeature,train_size):
