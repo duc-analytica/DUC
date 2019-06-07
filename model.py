@@ -23,6 +23,9 @@ def get_scaled_df(df):
             'months_active', 'recovery_per_month', 'vintage', 'vintage_bin', 
             'encoded_direction', 'encoded_frac_fluid_type', 'encoded_county', 
             'encoded_oper', 'encoded_formation', 'encoded_lateral_class',])
+        # This should be doable in one step, but for some reason putting 'scaled_' in one line was cutting the first letter off only two column names...
+    scaled_df.columns = scaled_df.columns.str.lstrip('scaled') 
+    scaled_df.columns = scaled_df.columns.str.lstrip('_') 
     return scaled_df
 
 def get_numeric_columns(df, skipcolumns=[]):
