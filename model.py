@@ -172,6 +172,7 @@ def pregression_test(df,xfeatures,yfeature,train_size):
     from sklearn.model_selection import train_test_split
     from sklearn.metrics import mean_squared_error, r2_score
     from sklearn import preprocessing
+    from sklearn.model_selection import cross_val_score
 
     y = df[yfeature]
     X = df[xfeatures]
@@ -195,9 +196,11 @@ def pregression_test(df,xfeatures,yfeature,train_size):
     
     model = model.fit(X_train_scaled, y_train)
     model.named_steps['linear'].coef_
+    
+    cross_val_score = cross_val_score(model, X_train, y_train, cv=3)
+    
     y_pred_poly = model.predict(X_train_scaled)
-
     mse = mean_squared_error(y_train, y_pred_poly)
     r2 = r2_score(y_train, y_pred_poly)
     
-    return mse, r2, model.named_steps['linear'].coef_
+    return mse, r2, model.named_steps['linear'].coef_, cross_val_score
