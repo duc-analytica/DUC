@@ -96,6 +96,7 @@ def lregression_test(df,xfeatures,yfeature,train_size):
     from sklearn.model_selection import train_test_split
     from sklearn.metrics import mean_squared_error, r2_score
     from sklearn import preprocessing
+    from sklearn.model_selection import cross_val_score
 
     y = df[yfeature]
     X = df[xfeatures]
@@ -114,6 +115,8 @@ def lregression_test(df,xfeatures,yfeature,train_size):
     lm1.fit(X_train, y_train)
     LinearRegression(copy_X=True, fit_intercept=False, n_jobs=None, normalize=False)
     
+    cross_val_score = cross_val_score(lm1, X_train, y_train, cv=3)
+    
     lm1_y_intercept = lm1.intercept_
     lm1_coefficients = lm1.coef_
     y_pred_lm1 = lm1.predict(X_train)
@@ -121,7 +124,7 @@ def lregression_test(df,xfeatures,yfeature,train_size):
     mse = mean_squared_error(y_train, y_pred_lm1)
     r2 = r2_score(y_train, y_pred_lm1)
     
-    return mse, r2, lm1.coef_
+    return mse, r2, lm1.coef_, cross_val_score
 
 
 def rregression_test(df,xfeatures,yfeature,train_size):
