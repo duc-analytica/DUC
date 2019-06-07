@@ -16,13 +16,13 @@ def get_scaled_df(df):
     numerics = ['int64', 'float64', 'float']
 
     scaled_df = df.select_dtypes(include=numerics)
-    scaled_df = scaled_df.drop(columns=['api14', 'recovery' ,'proppant_ppf', 'frac_fluid_gpf', 
+    scaled_df = scaled_df.drop(columns=['api14', 'proppant_ppf', 'frac_fluid_gpf', 
             'gross_perfs', 'frac_stages', 'oil_gravity', 'peak_boepd', 'oil_hist', 
             'gas_hist', 'gor_hist', 'ip90_boeqpd', 'tvd', 'sur_lat', 'sur_long', 
             'well_id', 'mid_point_lat', 'mid_point_long', 'recovery_per_foot', 
             'months_active', 'recovery_per_month', 'vintage', 'vintage_bin', 
             'encoded_direction', 'encoded_frac_fluid_type', 'encoded_county', 
-            'encoded_oper', 'encoded_formation', 'encoded_lateral_class',])
+            'encoded_oper', 'encoded_formation', 'encoded_lateral_class', 'clusterid' ])
         # This should be doable in one step, but for some reason putting 'scaled_' in one line was cutting the first letter off only two column names...
     scaled_df.columns = scaled_df.columns.str.lstrip('scaled') 
     scaled_df.columns = scaled_df.columns.str.lstrip('_') 
