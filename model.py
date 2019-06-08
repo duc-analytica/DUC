@@ -155,6 +155,10 @@ def rregression_test(df,xfeatures,yfeature,train_size):
     from sklearn.metrics import mean_squared_error, r2_score
     from sklearn import preprocessing
     from sklearn.model_selection import cross_val_score
+    
+    '''
+    Creates a ridge regression model for the given data frame, x features, y feature, and train size
+    '''
 
     y = df[yfeature]
     X = df[xfeatures]
@@ -169,35 +173,57 @@ def rregression_test(df,xfeatures,yfeature,train_size):
     train = pd.concat([X_train_scaled, y_train], axis=1)
     test = pd.concat([X_test_scaled, y_test], axis=1)
 
+    ### fit the transformed features to Ridge Regression
     reg = linear_model.Ridge(alpha=.5)
     reg.fit(X_train, y_train)
     Ridge(alpha=0.5, copy_X=True, fit_intercept=True, max_iter=None, normalize=False, random_state=123, solver='auto', tol=0.001)
     
+    ### predicting on test data-set
+    y_test_predict = reg.predict(X_test)
+    
+    ### Cross Validation
     cross_val_score = cross_val_score(reg, X_train, y_train, cv=3)
-    
-    reg_y_intercept = reg.intercept_ 
-    reg_coefficients = reg.coef_
-    y_pred_reg = reg.predict(X_train)
-    
-    mse = mean_squared_error(y_train, y_pred_reg)
-    r2 = r2_score(y_train, y_pred_reg)
 
+    y_train_predicted = reg.predict(X_train)
+    
+    ### evaluating the model on training dataset
+    rmse_train = np.sqrt(mean_squared_error(y_train, y_train_predicted))
+    r2_train = r2_score(y_train, y_train_predicted)
+
+    ### evaluating the model on test dataset
+    rmse_test = np.sqrt(mean_squared_error(y_test, y_test_predict))
+    r2_test = r2_score(y_test, y_test_predict)
+
+    print("The model performance for the training set")
+    print("-------------------------------------------")
+    print("RMSE of training set is {}".format(rmse_train))
+    print("R2 score of training set is {}".format(r2_train))
+
+    print("\n")
+    
+    print("The cross validation for the training set")
+    print("-------------------------------------------")
+    print("Cross Validation of training set is {}".format(cross_val_score))
+    
+    print("\n")
+
+    print("The model performance for the test set")
+    print("-------------------------------------------")
+    print("RMSE of test set is {}".format(rmse_test))
+    print("R2 score of test set is {}".format(r2_test))
+    
+    print("\n")
+    
     pd.DataFrame({'actual': y_train.recovery,
-                  'pm1': y_pred_reg.ravel()})\
+                  'pm1': y_train_predicted.ravel()})\
                   .melt(id_vars=['actual'], var_name='model', value_name='prediction')\
                   .pipe((sns.relplot, 'data'), x='actual', y='prediction')
     
-    plt.plot([10, 1000], [10, 1000], c='black', ls=':')
+    plt.plot([0, 1000], [0, 500], c='black', ls=':')
     plt.xlabel('Actual Recovery')
     plt.ylabel('Predicted Recovery')
-    plt.title('Ridge Regression: Predicted vs. Actual Recovery Amounts')
-    
-    print('This regression model accounts for {:.2%} of the variance in recovery with the selected features.'.format(r2))
-    print('-----')
-    print('Cross-validation Scores: {}'.format(cross_val_score))
-    print('-----')
-    print('The Coefficients of Variation: {}'.format(reg.coef_))
-    
+    plt.title('Polynomial Regression: Predicted vs. Actual Recovery Amounts')
+
     return
 
 
@@ -340,12 +366,12 @@ def run_models(df,xfeatures,yfeature,train_size):
     Funtion to run all models
     '''
     print('Logistic Regression Model:')
-    lregression_test(df, xfeatures, yfeature, 0.80)
+    lregression_test(df, xfeatures, yfeature, 0.70)
     print('\n')
     print('Ridge Regression Model:')
-    rregression_test(df, xfeatures, yfeature, 0.80)
+    rregression_test(df, xfeatures, yfeature, 0.70)
     print('\n')
     print('Polynomial Regression Model:')
-    pregression_test(df, xfeatures, yfeature, 0.80)
+    polynomial_regression_model(df, xfeatures, yfeature, 0.70)
     
     return
