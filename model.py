@@ -86,14 +86,14 @@ def create_kclusters(df,col_list,n_clusters,nameof_clustercolumn):
     df_columns = df.columns
 
     for thiscolumn in df_columns:
-        if thiscolumn not in col_list_scaled:
+        if thiscolumn not in col_list:
             cluster_df.drop([thiscolumn], axis=1, inplace=True)
 
     kmeans = KMeans(n_clusters)            
     kmeans.fit(cluster_df)
       
     cluster_df[nameof_clustercolumn] = kmeans.predict(cluster_df)        
-    cluster_df.drop(col_list_scaled,axis=1,inplace=True)
+    cluster_df.drop(col_list,axis=1,inplace=True)
     return_df = pd.concat([df,cluster_df], axis=1, join_axes=[df.index]) 
     return return_df
 
