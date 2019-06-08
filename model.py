@@ -415,8 +415,5 @@ def run_models(df,xfeatures,yfeature,train_size):
     print('\n')
     print('Polynomial Regression Model:')
     polynomial_regression_model(df, xfeatures, yfeature, 0.70)
-    print('\n')
-    print('Lasso Regression Model:')
-    lasso_regression_test(df,xfeatures,yfeature,train_size)
     
     return
