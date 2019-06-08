@@ -74,14 +74,11 @@ def compare_ttests(df,dependentvar,skipcolumns=[]):
     return results_df  
 
 def create_kclusters(df,col_list,n_clusters,nameof_clustercolumn):
-    from sklearn import preprocessing
     # '''  pass a datframe, list of columns to cluster, and a target number of clusters
     #      returns the modified datagrame, the inertia of the cluster fit, and a color constant applied to each point
     #   first, remove 'cluster_target' in case calling this function iteratively
     #   function will return a df with the 'cluster_target' column, evaluated and appended to it 
     #  '''
-
-    col_list_scaled = pd.DataFrame(preprocessing.scale(col_list))
 
     if nameof_clustercolumn in df.columns:     
         df.drop([nameof_clustercolumn],axis=1,inplace=True)
