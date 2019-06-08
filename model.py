@@ -201,61 +201,81 @@ def rregression_test(df,xfeatures,yfeature,train_size):
     return
 
 
-def pregression_test(df,xfeatures,yfeature,train_size):
+def polynomial_regression_model(df, xfeatures, yfeature, train_size, degree):
+    from sklearn.model_selection import train_test_split
+    from sklearn import preprocessing
     from sklearn.preprocessing import PolynomialFeatures
     from sklearn.linear_model import LinearRegression
-    from sklearn.pipeline import Pipeline
-
-    from sklearn.model_selection import train_test_split
     from sklearn.metrics import mean_squared_error, r2_score
-    from sklearn import preprocessing
     from sklearn.model_selection import cross_val_score
+    
+    '''
+    Creates a polynomial regression model for the given degree
+    '''
 
     y = df[yfeature]
     X = df[xfeatures]
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, random_state=123)
     
-    X_train_scaled = pd.DataFrame(preprocessing.scale(X_train))
-    X_test_scaled = pd.DataFrame(preprocessing.scale(X_test))
-    
-    y_train.reset_index(inplace=True, drop=True)
-    y_test.reset_index(inplace=True, drop=True)
+    X_train = pd.DataFrame(preprocessing.scale(X_train))
+    X_test = pd.DataFrame(preprocessing.scale(X_test))
+  
+    poly_features = PolynomialFeatures(degree=degree)
 
-    train = pd.concat([X_train_scaled, y_train], axis=1)
-    test = pd.concat([X_test_scaled, y_test], axis=1)
+    ### transforms the existing features to higher degree features.
+    X_train_poly = poly_features.fit_transform(X_train)
 
-    poly_features = PolynomialFeatures(degree=2)
-    X_train_scaled = poly_features.fit_transform(X_train_scaled)
+    ### fit the transformed features to Linear Regression
+    poly_model = LinearRegression()
+    poly_model.fit(X_train_poly, y_train)
+    
+    ### predicting on training data-set
+    y_train_predicted = poly_model.predict(X_train_poly)
+    
+    ### Cross Validation
+    cross_val_score = cross_val_score(poly_model, X_train, y_train, cv=3)
 
-    model = Pipeline([('poly', PolynomialFeatures(degree=2)), 
-        ('linear', LinearRegression(fit_intercept=False))])
-    
-    
-    model = model.fit(X_train_scaled, y_train)
-    model.named_steps['linear'].coef_
-    
-    cross_val_score = cross_val_score(model, X_train, y_train, cv=3)
-    
-    y_pred_poly = model.predict(X_train_scaled)
-    mse = mean_squared_error(y_train, y_pred_poly)
-    r2 = r2_score(y_train, y_pred_poly)
+    ### predicting on test data-set
+    y_test_predict = poly_model.predict(poly_features.fit_transform(X_test))
 
+    ### evaluating the model on training dataset
+    rmse_train = np.sqrt(mean_squared_error(y_train, y_train_predicted))
+    r2_train = r2_score(y_train, y_train_predicted)
+
+    ### evaluating the model on test dataset
+    rmse_test = np.sqrt(mean_squared_error(y_test, y_test_predict))
+    r2_test = r2_score(y_test, y_test_predict)
+
+    print("The model performance for the training set")
+    print("-------------------------------------------")
+    print("RMSE of training set is {}".format(rmse_train))
+    print("R2 score of training set is {}".format(r2_train))
+
+    print("\n")
+    
+    print("The cross validation for the training set")
+    print("-------------------------------------------")
+    print("Cross Validation of training set is {}".format(cross_val_score))
+    
+    print("\n")
+
+    print("The model performance for the test set")
+    print("-------------------------------------------")
+    print("RMSE of test set is {}".format(rmse_test))
+    print("R2 score of test set is {}".format(r2_test))
+    
+    print("\n")
+    
     pd.DataFrame({'actual': y_train.recovery,
-                  'pm1': y_pred_poly.ravel()})\
+                  'pm1': y_train_predicted.ravel()})\
                   .melt(id_vars=['actual'], var_name='model', value_name='prediction')\
                   .pipe((sns.relplot, 'data'), x='actual', y='prediction')
     
-    plt.plot([10, 1000], [10, 1000], c='black', ls=':')
+    plt.plot([0, 1000], [0, 500], c='black', ls=':')
     plt.xlabel('Actual Recovery')
     plt.ylabel('Predicted Recovery')
     plt.title('Polynomial Regression: Predicted vs. Actual Recovery Amounts')
-    
-    print('This regression model accounts for {:.2%} of the variance in recovery with the selected features.'.format(r2))
-    print('-----')
-    print('Cross-validation Scores: {}'.format(cross_val_score))
-    print('-----')
-    print('The Coefficients of Variation: {}'.format(model.named_steps['linear'].coef_))
-    
+
     return
 
 def lasso_regression_test(df,xfeatures,yfeature,train_size):
