@@ -261,7 +261,7 @@ def polynomial_regression_model(df, xfeatures, yfeature, train_size):
     from sklearn.model_selection import cross_val_score
     
     '''
-    Creates a polynomial regression model for the given degree of 3
+    Creates a polynomial regression model for the given degree of 2
     '''
 
     y = df[yfeature]
@@ -271,7 +271,7 @@ def polynomial_regression_model(df, xfeatures, yfeature, train_size):
     X_train = pd.DataFrame(preprocessing.scale(X_train))
     X_test = pd.DataFrame(preprocessing.scale(X_test))
   
-    poly_features = PolynomialFeatures(degree=3)
+    poly_features = PolynomialFeatures(degree=2)
 
     ### transforms the existing features to higher degree features.
     X_train_poly = poly_features.fit_transform(X_train)
