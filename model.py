@@ -163,7 +163,7 @@ def lregression_test(df,xfeatures,yfeature,train_size):
                   .melt(id_vars=['actual'], var_name='model', value_name='prediction')\
                   .pipe((sns.relplot, 'data'), x='actual', y='prediction')
     
-    plt.plot([0, 1000], [0, 500], c='black', ls=':')
+    plt.plot([0, 1000], [0, 1000], c='black', ls=':')
     plt.xlabel('Actual Recovery')
     plt.ylabel('Predicted Recovery')
     plt.title('Linear Regression: Predicted vs. Actual Recovery Amounts')
@@ -242,7 +242,7 @@ def rregression_test(df,xfeatures,yfeature,train_size):
                   .melt(id_vars=['actual'], var_name='model', value_name='prediction')\
                   .pipe((sns.relplot, 'data'), x='actual', y='prediction')
     
-    plt.plot([0, 1000], [0, 500], c='black', ls=':')
+    plt.plot([0, 1000], [0, 1000], c='black', ls=':')
     plt.xlabel('Actual Recovery')
     plt.ylabel('Predicted Recovery')
     plt.title('Ridge Regression: Predicted vs. Actual Recovery Amounts')
@@ -320,7 +320,7 @@ def polynomial_regression_model(df, xfeatures, yfeature, train_size):
                   .melt(id_vars=['actual'], var_name='model', value_name='prediction')\
                   .pipe((sns.relplot, 'data'), x='actual', y='prediction')
     
-    plt.plot([0, 1000], [0, 500], c='black', ls=':')
+    plt.plot([0, 1000], [0, 1000], c='black', ls=':')
     plt.xlabel('Actual Recovery')
     plt.ylabel('Predicted Recovery')
     plt.title('Polynomial Regression: Predicted vs. Actual Recovery Amounts')
@@ -396,7 +396,7 @@ def lasso_regression_test(df,xfeatures,yfeature,train_size):
                   .melt(id_vars=['actual'], var_name='model', value_name='prediction')\
                   .pipe((sns.relplot, 'data'), x='actual', y='prediction')
     
-    plt.plot([0, 1000], [0, 500], c='black', ls=':')
+    plt.plot([0, 1000], [0, 1000], c='black', ls=':')
     plt.xlabel('Actual Recovery')
     plt.ylabel('Predicted Recovery')
     plt.title('Lasso Regression: Predicted vs. Actual Recovery Amounts')
