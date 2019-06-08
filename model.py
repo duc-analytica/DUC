@@ -89,7 +89,7 @@ def create_kclusters(df,col_list,n_clusters,nameof_clustercolumn):
         if thiscolumn not in col_list:
             cluster_df.drop([thiscolumn], axis=1, inplace=True)
 
-    kmeans = KMeans(n_clusters)            
+    kmeans = KMeans(n_clusters, random_state=123)            
     kmeans.fit(cluster_df)
       
     cluster_df[nameof_clustercolumn] = kmeans.predict(cluster_df)        
