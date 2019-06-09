@@ -113,8 +113,8 @@ def lregression_test(df,xfeatures,yfeature,train_size):
     X = df[xfeatures]
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, random_state=123)
     
-    ### X_train_scaled = pd.DataFrame(preprocessing.scale(X_train))
-    ### X_test_scaled = pd.DataFrame(preprocessing.scale(X_test))
+    ### X_train = pd.DataFrame(preprocessing.scale(X_train))
+    ### X_test = pd.DataFrame(preprocessing.scale(X_test))
 
     ### fit the transformed features to Linear Regression
     lm1 = LinearRegression(fit_intercept=False) 
@@ -394,7 +394,7 @@ def run_models(df,xfeatures,yfeature,train_size):
     '''
     Funtion to run all models
     '''
-    print('Logistic Regression Model:')
+    print('Linear Regression Model:')
     lregression_test(df, xfeatures, yfeature, 0.80)
     print('\n')
     print('Ridge Regression Model:')

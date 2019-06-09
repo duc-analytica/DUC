@@ -92,7 +92,7 @@ def feature_engineer(df):
     '''
     #  recovery units are     mboeq         (thousand barrel oil equivalents)   
     df['recovery'] = df.oil_eur + df.gas_eur/6
-    df = df[df.recovery < 700]
+    df = df[df.recovery < 1000]
     #  recovery_per_foot units are  boe/ft       (barrels (boe) per foot)    
     df['recovery_per_foot'] = df['recovery']/df['lateral_len'] * 1000
     df = df[df.recovery_per_foot < 1000]
@@ -266,7 +266,7 @@ def encode_scale(df):
         df[new_scaled_column] = (df[col] - df[col].min()) / (df[col].max() - df[col].min())
     return(df)
 
-def prep_data(df,basin='all',direc='all',tvdmin=0,tvdmax=0,gperfmin=0,gperfmax=0,multiwell='all',clusterid=99):
+def prep_data(df):
     #''' Function that combines all functions and produces a final dataframe in a csv
     #    basin options = all,central platform, delaware, midland
     #    direc options = 'all', 'horizontal', 'vertical'
@@ -274,6 +274,8 @@ def prep_data(df,basin='all',direc='all',tvdmin=0,tvdmax=0,gperfmin=0,gperfmax=0
     #    tvdmax  (numeric)  - selects observations less than tvdmin  (0 means no maximum)
     #    gperfmin  (numeric)  - selects observations greater than gperfmin  (0 means no minimum)
     #    gperfmax  (numeric)  - selects observations less than gperfmax  (0 means no maximum)    
+
+    # (**Automation Features**),basin='all',direc='all',tvdmin=0,tvdmax=0,gperfmin=0,gperfmax=0,multiwell='all',clusterid=99
     #    multi-well options - 'all', 'true', 'false'
     #    clusterid options - 99=all, or input specific numeric id value
     #    here's an example
@@ -300,6 +302,7 @@ def prep_data(df,basin='all',direc='all',tvdmin=0,tvdmax=0,gperfmin=0,gperfmax=0
     rename_cols(df)
     # filter out subsets of dataframe based on function parameters, this needs to happen
     #  before scaling the data
+    '''
     if basin !='all':
         df = df[(df.sub_basin.str.lower() == basin.lower())]
     if multiwell.lower() !='all':
@@ -321,6 +324,7 @@ def prep_data(df,basin='all',direc='all',tvdmin=0,tvdmax=0,gperfmin=0,gperfmax=0
         df = df[(df.clusterid == clusterid)] 
     if len(df) < 100:
         print(' WARNING- Number of Observations is too low: ',len(df))
+        '''
 
     df = encode_scale(df)   
     df.to_csv('cleaned_oil_df.csv', index=False)
