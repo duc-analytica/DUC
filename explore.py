@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import xgboost as xgb
 from model import get_scaled_df
+from model import filter_columns
 
 def xgb_rank(df,target_variable,feature_percent=80,mode='gain'):
     # ''' pass it the dataframe and the target variable,  
@@ -71,3 +72,26 @@ def df_summary(df):
     print(nulls_by_row(df))
     print('---Unique Rows')
     print (df.apply(lambda x: x.nunique()))
+
+
+def merge_clusters2origdf(df, cluster_df, origxl='CapstoneData.xlsx'):
+    # ''' pass in the dataframe being run, plus the dataframe returned from create_kclusters
+    # this purpose of this function is to take the clusterid and write them back to the original CapstoneData.xlsx
+    # '''
+    api_df = df[['api14']]
+    cluster_id = cluster_df[['clusterid']]
+    # merge df and cluster_df together
+    id_cluster = pd.concat([api_df,cluster_id], axis=1, join_axes=[api_df.index]) 
+    orig_df = pd.read_excel(origxl).infer_objects()
+    # clear existing clusterid column
+    orig_df = orig_df.drop(columns=['clusterid'])
+
+    # merging on api14 is returning a duplicate key error
+    xcel_df = orig_df.merge(id_cluster, on='api14', how='left')
+
+    # now overwrite xcel_df on top of 'CapstoneData.xlsx' and we should be back to the original     
+    # excel file, except it has the cluster ID in it (and observations not included in set have clusterids that are cleared)
+
+#   xcel_df.to_excel(origxl)
+   
+    return xcel_df
