@@ -97,11 +97,6 @@ def create_kclusters(df,col_list,n_clusters,nameof_clustercolumn):
     return_df = pd.concat([df,cluster_df], axis=1, join_axes=[df.index]) 
     return return_df
 
-def normalize(df, columns):
-    for col in columns:
-        df[col] = np.sqrt(df[col])
-    return df
-
 def lregression_test(df,xfeatures,yfeature,train_size):
     from sklearn.linear_model import LinearRegression
     from sklearn.model_selection import train_test_split
@@ -113,6 +108,11 @@ def lregression_test(df,xfeatures,yfeature,train_size):
     X = df[xfeatures]
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, random_state=123)
     
+    from sklearn.preprocessing import quantile_transform
+
+    X_train = pd.DataFrame(quantile_transform(X_train, n_quantiles=10, random_state=0, copy=True))
+    X_test = pd.DataFrame(quantile_transform(X_test, n_quantiles=10, random_state=0, copy=True))
+
     ### X_train = pd.DataFrame(preprocessing.scale(X_train))
     ### X_test = pd.DataFrame(preprocessing.scale(X_test))
 
@@ -185,6 +185,11 @@ def rregression_test(df,xfeatures,yfeature,train_size):
     y = df[yfeature]
     X = df[xfeatures]
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, random_state=123)
+
+    from sklearn.preprocessing import quantile_transform
+
+    X_train = pd.DataFrame(quantile_transform(X_train, n_quantiles=10, random_state=0, copy=True))
+    X_test = pd.DataFrame(quantile_transform(X_test, n_quantiles=10, random_state=0, copy=True))
     
     ### X_train_scaled = pd.DataFrame(preprocessing.scale(X_train))
     ### X_test_scaled = pd.DataFrame(preprocessing.scale(X_test))
@@ -258,6 +263,11 @@ def polynomial_regression_model(df, xfeatures, yfeature, train_size):
     y = df[yfeature]
     X = df[xfeatures]
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, random_state=123)
+
+    from sklearn.preprocessing import quantile_transform
+
+    X_train = pd.DataFrame(quantile_transform(X_train, n_quantiles=10, random_state=0, copy=True))
+    X_test = pd.DataFrame(quantile_transform(X_test, n_quantiles=10, random_state=0, copy=True))
     
     ### X_train = pd.DataFrame(preprocessing.scale(X_train))
     ### X_test = pd.DataFrame(preprocessing.scale(X_test))
@@ -332,6 +342,11 @@ def lasso_regression_test(df,xfeatures,yfeature,train_size):
     y = df[yfeature]
     X = df[xfeatures]
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, random_state=123)
+
+    from sklearn.preprocessing import quantile_transform
+
+    X_train = pd.DataFrame(quantile_transform(X_train, n_quantiles=10, random_state=0, copy=True))
+    X_test = pd.DataFrame(quantile_transform(X_test, n_quantiles=10, random_state=0, copy=True))
 
     ### X_train = pd.DataFrame(preprocessing.scale(X_train))
     ### X_test = pd.DataFrame(preprocessing.scale(X_test))
