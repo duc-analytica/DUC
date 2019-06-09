@@ -97,6 +97,11 @@ def create_kclusters(df,col_list,n_clusters,nameof_clustercolumn):
     return_df = pd.concat([df,cluster_df], axis=1, join_axes=[df.index]) 
     return return_df
 
+def normalize(df, columns):
+    for col in columns:
+        df[col] = np.sqrt(df[col])
+    return df
+
 def lregression_test(df,xfeatures,yfeature,train_size):
     from sklearn.linear_model import LinearRegression
     from sklearn.model_selection import train_test_split
@@ -108,14 +113,8 @@ def lregression_test(df,xfeatures,yfeature,train_size):
     X = df[xfeatures]
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, random_state=123)
     
-    X_train_scaled = pd.DataFrame(preprocessing.scale(X_train))
-    X_test_scaled = pd.DataFrame(preprocessing.scale(X_test))
-    
-    y_train.reset_index(inplace=True, drop=True)
-    y_test.reset_index(inplace=True, drop=True)
-
-    train = pd.concat([X_train_scaled, y_train], axis=1)
-    test = pd.concat([X_test_scaled, y_test], axis=1)
+    ### X_train_scaled = pd.DataFrame(preprocessing.scale(X_train))
+    ### X_test_scaled = pd.DataFrame(preprocessing.scale(X_test))
 
     ### fit the transformed features to Linear Regression
     lm1 = LinearRegression(fit_intercept=False) 
@@ -163,7 +162,7 @@ def lregression_test(df,xfeatures,yfeature,train_size):
                   .melt(id_vars=['actual'], var_name='model', value_name='prediction')\
                   .pipe((sns.relplot, 'data'), x='actual', y='prediction')
     
-    plt.plot([0, 1000], [0, 1000], c='black', ls=':')
+    ### plt.plot([0, 800], [0, 300], c='black', ls=':')
     plt.xlabel('Actual Recovery')
     plt.ylabel('Predicted Recovery')
     plt.title('Linear Regression: Predicted vs. Actual Recovery Amounts')
@@ -187,14 +186,8 @@ def rregression_test(df,xfeatures,yfeature,train_size):
     X = df[xfeatures]
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, random_state=123)
     
-    X_train_scaled = pd.DataFrame(preprocessing.scale(X_train))
-    X_test_scaled = pd.DataFrame(preprocessing.scale(X_test))
-    
-    y_train.reset_index(inplace=True, drop=True)
-    y_test.reset_index(inplace=True, drop=True)
-
-    train = pd.concat([X_train_scaled, y_train], axis=1)
-    test = pd.concat([X_test_scaled, y_test], axis=1)
+    ### X_train_scaled = pd.DataFrame(preprocessing.scale(X_train))
+    ### X_test_scaled = pd.DataFrame(preprocessing.scale(X_test))
 
     ### fit the transformed features to Ridge Regression
     reg = linear_model.Ridge(alpha=.5)
@@ -242,7 +235,7 @@ def rregression_test(df,xfeatures,yfeature,train_size):
                   .melt(id_vars=['actual'], var_name='model', value_name='prediction')\
                   .pipe((sns.relplot, 'data'), x='actual', y='prediction')
     
-    plt.plot([0, 1000], [0, 1000], c='black', ls=':')
+    ### plt.plot([0, 800], [0, 300], c='black', ls=':')
     plt.xlabel('Actual Recovery')
     plt.ylabel('Predicted Recovery')
     plt.title('Ridge Regression: Predicted vs. Actual Recovery Amounts')
@@ -266,8 +259,8 @@ def polynomial_regression_model(df, xfeatures, yfeature, train_size):
     X = df[xfeatures]
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, random_state=123)
     
-    X_train = pd.DataFrame(preprocessing.scale(X_train))
-    X_test = pd.DataFrame(preprocessing.scale(X_test))
+    ### X_train = pd.DataFrame(preprocessing.scale(X_train))
+    ### X_test = pd.DataFrame(preprocessing.scale(X_test))
   
     poly_features = PolynomialFeatures(degree=2)
 
@@ -320,7 +313,7 @@ def polynomial_regression_model(df, xfeatures, yfeature, train_size):
                   .melt(id_vars=['actual'], var_name='model', value_name='prediction')\
                   .pipe((sns.relplot, 'data'), x='actual', y='prediction')
     
-    plt.plot([0, 1000], [0, 1000], c='black', ls=':')
+    ### plt.plot([0, 5], [0, 5], c='black', ls=':')
     plt.xlabel('Actual Recovery')
     plt.ylabel('Predicted Recovery')
     plt.title('Polynomial Regression: Predicted vs. Actual Recovery Amounts')
@@ -339,15 +332,9 @@ def lasso_regression_test(df,xfeatures,yfeature,train_size):
     y = df[yfeature]
     X = df[xfeatures]
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, random_state=123)
-    
-    X_train_scaled = pd.DataFrame(preprocessing.scale(X_train))
-    X_test_scaled = pd.DataFrame(preprocessing.scale(X_test))
-    
-    y_train.reset_index(inplace=True, drop=True)
-    y_test.reset_index(inplace=True, drop=True)
 
-    train = pd.concat([X_train_scaled, y_train], axis=1)
-    test = pd.concat([X_test_scaled, y_test], axis=1)
+    ### X_train = pd.DataFrame(preprocessing.scale(X_train))
+    ### X_test = pd.DataFrame(preprocessing.scale(X_test))
 
     clf = linear_model.Lasso(alpha=0.1) 
     clf.fit(X_train, y_train)
@@ -396,7 +383,7 @@ def lasso_regression_test(df,xfeatures,yfeature,train_size):
                   .melt(id_vars=['actual'], var_name='model', value_name='prediction')\
                   .pipe((sns.relplot, 'data'), x='actual', y='prediction')
     
-    plt.plot([0, 1000], [0, 1000], c='black', ls=':')
+    ### plt.plot([0, 800], [0, 300], c='black', ls=':')
     plt.xlabel('Actual Recovery')
     plt.ylabel('Predicted Recovery')
     plt.title('Lasso Regression: Predicted vs. Actual Recovery Amounts')
@@ -408,12 +395,12 @@ def run_models(df,xfeatures,yfeature,train_size):
     Funtion to run all models
     '''
     print('Logistic Regression Model:')
-    lregression_test(df, xfeatures, yfeature, 0.70)
+    lregression_test(df, xfeatures, yfeature, 0.80)
     print('\n')
     print('Ridge Regression Model:')
-    rregression_test(df, xfeatures, yfeature, 0.70)
+    rregression_test(df, xfeatures, yfeature, 0.80)
     print('\n')
     print('Polynomial Regression Model:')
-    polynomial_regression_model(df, xfeatures, yfeature, 0.70)
+    polynomial_regression_model(df, xfeatures, yfeature, 0.80)
     
     return
