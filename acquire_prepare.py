@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
+from sklearn import preprocessing
 
 ### Select Data ###
 
@@ -92,7 +93,7 @@ def feature_engineer(df):
     '''
     #  recovery units are     mboeq         (thousand barrel oil equivalents)   
     df['recovery'] = df.oil_eur + df.gas_eur/6
-    df = df[df.recovery < 1000]
+    df = df[df.recovery < 700]
     #  recovery_per_foot units are  boe/ft       (barrels (boe) per foot)    
     df['recovery_per_foot'] = df['recovery']/df['lateral_len'] * 1000
     df = df[df.recovery_per_foot < 1000]
@@ -260,10 +261,20 @@ def encode_scale(df):
     for col in columns_to_encode:
         new_scaled_column = 'scaled_'+col
         new_encoded_column = 'encoded_'+col
+#         df[new_scaled_column] = pd.DataFrame(preprocessing.scale(df[new_encoded_column]))
         df[new_scaled_column] = (df[new_encoded_column] - df[new_encoded_column].min()) / (df[new_encoded_column].max() - df[new_encoded_column].min())
-    for col in numeric_columns:
+#         print('scaled value in for loop for columns_to_encode:')
+#         print(df[new_scaled_column])
+
+# tried removing these API14 and Well Id from from scaling to prevent warning about int64 being converted to float64, but still getting warning
+    print()
+    for col in numeric_columns: 
         new_scaled_column = 'scaled_'+col
+#         df[new_scaled_column] = pd.DataFrame(preprocessing.scale(df[col]))
         df[new_scaled_column] = (df[col] - df[col].min()) / (df[col].max() - df[col].min())
+#         print('scaled value in for loop for columns_to_encode:')
+#         print(df[new_scaled_column])
+
     return(df)
 
 def prep_data(df):

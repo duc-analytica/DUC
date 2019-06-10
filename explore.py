@@ -1,8 +1,24 @@
 import pandas as pd
 import numpy as np
 import xgboost as xgb
-from model import get_scaled_df
+# from model import get_scaled_df
 from model import filter_columns
+
+def get_scaled_df(df):
+    numerics = ['int64', 'float64', 'float']
+
+    scaled_df = df.select_dtypes(include=numerics)
+    scaled_df = scaled_df.drop(columns=['api14', 'proppant_ppf', 'frac_fluid_gpf', 
+            'gross_perfs', 'frac_stages', 'oil_gravity', 'peak_boepd', 'oil_hist', 
+            'gas_hist', 'gor_hist', 'ip90_boeqpd', 'tvd', 'sur_lat', 'sur_long', 
+            'well_id', 'mid_point_lat', 'mid_point_long', 'recovery_per_foot', 
+            'months_active', 'recovery_per_month', 'vintage', 'vintage_bin', 
+            'encoded_direction', 'encoded_frac_fluid_type', 'encoded_county', 
+            'encoded_oper', 'encoded_formation', 'encoded_lateral_class']) # removed clusterid from list
+        # This should be doable in one step, but for some reason putting 'scaled_' in one line was cutting the first letter off only two column names...
+    scaled_df.columns = scaled_df.columns.str.lstrip('scaled') 
+    scaled_df.columns = scaled_df.columns.str.lstrip('_') 
+    return scaled_df
 
 def xgb_rank(df,target_variable,feature_percent=80,mode='gain'):
     # ''' pass it the dataframe and the target variable,  
@@ -44,7 +60,7 @@ def xgb_rank(df,target_variable,feature_percent=80,mode='gain'):
         else:
             feature_list.append(feature_name)
             scaled_features.append(scaled_name)
-    return feature_list, scaled_features, importance_df, 
+    return feature_list, scaled_features, importance_df
 
 def nulls_by_col(df):
     num_missing = df.isnull().sum()
