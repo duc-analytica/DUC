@@ -14,22 +14,6 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, median_absolute_error
 
 
-def get_scaled_df(df):
-    numerics = ['int64', 'float64', 'float']
-
-    scaled_df = df.select_dtypes(include=numerics)
-    scaled_df = scaled_df.drop(columns=['api14', 'proppant_ppf', 'frac_fluid_gpf', 
-            'gross_perfs', 'frac_stages', 'oil_gravity', 'peak_boepd', 'oil_hist', 
-            'gas_hist', 'gor_hist', 'ip90_boeqpd', 'tvd', 'sur_lat', 'sur_long', 
-            'well_id', 'mid_point_lat', 'mid_point_long', 'recovery_per_foot', 
-            'months_active', 'recovery_per_month', 'vintage', 'vintage_bin', 
-            'encoded_direction', 'encoded_frac_fluid_type', 'encoded_county', 
-            'encoded_oper', 'encoded_formation', 'encoded_lateral_class', 'clusterid' ])
-        # This should be doable in one step, but for some reason putting 'scaled_' in one line was cutting the first letter off only two column names...
-    scaled_df.columns = scaled_df.columns.str.lstrip('scaled') 
-    scaled_df.columns = scaled_df.columns.str.lstrip('_') 
-    return scaled_df
-
 def get_numeric_columns(df, skipcolumns=[]):
     #   ''' arguments - (dataframe, optional list of strings)
     #   Purpose is to return a list of numeric columns from a dataframe
@@ -162,7 +146,7 @@ def lregression_test(df,xfeatures,yfeature,train_size):
                   .melt(id_vars=['actual'], var_name='model', value_name='prediction')\
                   .pipe((sns.relplot, 'data'), x='actual', y='prediction')
     
-    ### plt.plot([0, 800], [0, 300], c='black', ls=':')
+    plt.plot([y_train.min(), y_train.max()], [y_train.min(), y_train.max()], c='black', ls=':')
     plt.xlabel('Actual Recovery')
     plt.ylabel('Predicted Recovery')
     plt.title('Linear Regression: Predicted vs. Actual Recovery Amounts')
@@ -240,7 +224,7 @@ def rregression_test(df,xfeatures,yfeature,train_size):
                   .melt(id_vars=['actual'], var_name='model', value_name='prediction')\
                   .pipe((sns.relplot, 'data'), x='actual', y='prediction')
     
-    ### plt.plot([0, 800], [0, 300], c='black', ls=':')
+    plt.plot([y_train.min(), y_train.max()], [y_train.min(), y_train.max()], c='black', ls=':')
     plt.xlabel('Actual Recovery')
     plt.ylabel('Predicted Recovery')
     plt.title('Ridge Regression: Predicted vs. Actual Recovery Amounts')
@@ -323,7 +307,7 @@ def polynomial_regression_model(df, xfeatures, yfeature, train_size):
                   .melt(id_vars=['actual'], var_name='model', value_name='prediction')\
                   .pipe((sns.relplot, 'data'), x='actual', y='prediction')
     
-    ### plt.plot([0, 5], [0, 5], c='black', ls=':')
+    plt.plot([y_train.min(), y_train.max()], [y_train.min(), y_train.max()], c='black', ls=':')
     plt.xlabel('Actual Recovery')
     plt.ylabel('Predicted Recovery')
     plt.title('Polynomial Regression: Predicted vs. Actual Recovery Amounts')
@@ -398,7 +382,7 @@ def lasso_regression_test(df,xfeatures,yfeature,train_size):
                   .melt(id_vars=['actual'], var_name='model', value_name='prediction')\
                   .pipe((sns.relplot, 'data'), x='actual', y='prediction')
     
-    ### plt.plot([0, 800], [0, 300], c='black', ls=':')
+    plt.plot([y_train.min(), y_train.max()], [y_train.min(), y_train.max()], c='black', ls=':')
     plt.xlabel('Actual Recovery')
     plt.ylabel('Predicted Recovery')
     plt.title('Lasso Regression: Predicted vs. Actual Recovery Amounts')
@@ -410,12 +394,12 @@ def run_models(df,xfeatures,yfeature,train_size):
     Funtion to run all models
     '''
     print('Linear Regression Model:')
-    lregression_test(df, xfeatures, yfeature, 0.80)
+    lregression_test(df, xfeatures, yfeature, train_size)
     print('\n')
     print('Ridge Regression Model:')
-    rregression_test(df, xfeatures, yfeature, 0.80)
+    rregression_test(df, xfeatures, yfeature, train_size)
     print('\n')
     print('Polynomial Regression Model:')
-    polynomial_regression_model(df, xfeatures, yfeature, 0.80)
+    polynomial_regression_model(df, xfeatures, yfeature, train_size)
     
     return
