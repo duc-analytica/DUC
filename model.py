@@ -394,12 +394,12 @@ def run_models(df,xfeatures,yfeature,train_size):
     Funtion to run all models
     '''
     print('Linear Regression Model:')
-    lregression_test(df, xfeatures, yfeature, 0.80)
+    lregression_test(df, xfeatures, yfeature, train_size)
     print('\n')
     print('Ridge Regression Model:')
-    rregression_test(df, xfeatures, yfeature, 0.80)
+    rregression_test(df, xfeatures, yfeature, train_size)
     print('\n')
     print('Polynomial Regression Model:')
-    polynomial_regression_model(df, xfeatures, yfeature, 0.80)
+    polynomial_regression_model(df, xfeatures, yfeature, train_size)
     
     return
