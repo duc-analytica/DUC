@@ -73,7 +73,6 @@ def df_summary(df):
     print('---Unique Rows')
     print (df.apply(lambda x: x.nunique()))
 
-
 def merge_clusters2origdf(df, cluster_df, origxl='CapstoneData.xlsx'):
     # ''' pass in the dataframe being run, plus the dataframe returned from create_kclusters
     # this purpose of this function is to take the clusterid and write them back to the original CapstoneData.xlsx
@@ -85,13 +84,10 @@ def merge_clusters2origdf(df, cluster_df, origxl='CapstoneData.xlsx'):
     orig_df = pd.read_excel(origxl).infer_objects()
     # clear existing clusterid column
     orig_df = orig_df.drop(columns=['clusterid'])
-
-    # merging on api14 is returning a duplicate key error
-    xcel_df = orig_df.merge(id_cluster, on='api14', how='left')
-
-    # now overwrite xcel_df on top of 'CapstoneData.xlsx' and we should be back to the original     
-    # excel file, except it has the cluster ID in it (and observations not included in set have clusterids that are cleared)
-
-#   xcel_df.to_excel(origxl)
-   
+    orig_df.rename(columns={'API14': 'api14'}, inplace=True)
+    xcel_df = orig_df.merge(id_cluster, how='left', left_on='api14', right_on='api14')  
+# now overwrite xcel_df on top of 'CapstoneData.xlsx' and we should be back to the original     
+# excel file, except it has the cluster ID in it (and observations not included in set have clusterids that are cleared)
+    xcel_df.to_excel(origxl, index=False)
+    print('clusterid column appended to ',origxl)
     return xcel_df
