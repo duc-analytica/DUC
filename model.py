@@ -232,7 +232,7 @@ def rregression_test(df,xfeatures,yfeature,train_size):
     return
 
 
-def polynomial_regression_model(df, xfeatures, yfeature, train_size):
+def polynomial_regression_model(df, xfeatures, yfeature, train_size, file_name):
     from sklearn.model_selection import train_test_split
     from sklearn import preprocessing
     from sklearn.preprocessing import PolynomialFeatures
@@ -312,6 +312,14 @@ def polynomial_regression_model(df, xfeatures, yfeature, train_size):
     plt.ylabel('Predicted Recovery')
     plt.title('Polynomial Regression: Predicted vs. Actual Recovery Amounts')
 
+    pred_df = pd.DataFrame(y_test.recovery)
+    pred_df = pred_df.reset_index(drop=True)
+    test_pred_df = pd.DataFrame(y_test_predict)
+    df_preds = pd.merge(pred_df, test_pred_df, how='left', left_index=True, right_index=True)
+    df_preds.columns = ['actual', 'predicted']
+
+    return df_preds.to_excel(file_name +'.xlsx')
+
     return
 
 def lasso_regression_test(df,xfeatures,yfeature,train_size):
@@ -389,7 +397,7 @@ def lasso_regression_test(df,xfeatures,yfeature,train_size):
     
     return
 
-def run_models(df,xfeatures,yfeature,train_size):
+def run_models(df,xfeatures,yfeature,train_size, file_name):
     '''
     Funtion to run all models
     '''
@@ -400,6 +408,6 @@ def run_models(df,xfeatures,yfeature,train_size):
     rregression_test(df, xfeatures, yfeature, train_size)
     print('\n')
     print('Polynomial Regression Model:')
-    polynomial_regression_model(df, xfeatures, yfeature, train_size)
+    polynomial_regression_model(df, xfeatures, yfeature, train_size, file_name)
     
     return

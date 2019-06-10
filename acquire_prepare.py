@@ -93,7 +93,7 @@ def feature_engineer(df):
     '''
     #  recovery units are     mboeq         (thousand barrel oil equivalents)   
     df['recovery'] = df.oil_eur + df.gas_eur/6
-    df = df[df.recovery < 700]
+    df = df[df.recovery < 1000]
     #  recovery_per_foot units are  boe/ft       (barrels (boe) per foot)    
     df['recovery_per_foot'] = df['recovery']/df['lateral_len'] * 1000
     df = df[df.recovery_per_foot < 1000]
