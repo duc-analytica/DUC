@@ -212,8 +212,6 @@ def fill_zero(df):
     # change frac_stages NaNs of horizontally-drilled wells to median of the horizontally-drilled wells
     condition2 = (df.frac_stages.isnull()) & (df.type == 'Horizontal')
     df['frac_stages'] = np.where((condition2), middle, df['frac_stages'])
-    # change oil_gravity NaNs to 0.
-    df['oil_gravity'] = np.where(df.oil_gravity.isnull(), 0, df['oil_gravity'])
     
     return df
 
