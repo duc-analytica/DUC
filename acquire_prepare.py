@@ -115,7 +115,7 @@ def remove_columns(df):
     '''
     Function that removes columns we no longer need:  ,   gg - got rid of entity_reserve_column
     '''
-    cols_to_remove = [ 'oil_eur', 'gas_eur']
+    cols_to_remove = [ 'oil_eur', 'gas_eur', 'oil_gravity']
     
     df = df.drop(columns=cols_to_remove)
     
